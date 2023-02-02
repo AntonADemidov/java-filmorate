@@ -30,47 +30,47 @@ public class FilmController {
         film.setId(++idCounter);
         films.put(film.getId(), film);
 
-        logger.info(String.format("A new movie was created in the database: %s with id # %d", film.getName(),
-                film.getId()));
+        logger.info(String.format("Новый фильм добавлен в базу: %s c id # %d.", film.getName(), film.getId()));
+
         return film;
     }
 
     @PutMapping
     public Film update(@RequestBody Film film) throws ValidationException {
         if (!films.containsKey(film.getId())) {
-            message = "The movie with this id does not exist";
+            message = "Пользователь с указанным id отсутствует в базе.";
             logger.error(message);
             throw new ValidationException(message);
         }
         validate(film);
         films.put(film.getId(), film);
 
-        logger.info(String.format("The movie has been updated in the database: %s with id # %d", film.getName(),
-                film.getId()));
+        logger.info(String.format("Фильм с id # %d обновлен в базе: %s", film.getId(), film.getName()));
+
         return film;
     }
 
     private void validate (Film film) throws ValidationException {
         if (film.getName().isBlank()) {
-            message = "The title of the movie cannot be empty";
+            message = "Название фильма не может быть пустым";
             logger.error(message);
             throw new ValidationException(message);
         }
 
         if (!(film.getDescription().length() <= 200)) {
-            message = "The maximum length of the description is 200 characters";
+            message = "Максимальная длина описания - 200 символов";
             logger.error(message);
             throw new ValidationException(message);
         }
 
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            message = "Release date — no earlier than December 28, 1895";
+            message = "Дата релиза не может быть ранее 28 декабря 1895 года";
             logger.error(message);
             throw new ValidationException(message);
         }
 
         if (film.getDuration() < 0) {
-            message = "The duration of the film should be positive";
+            message = "Продолжительность фильма должна быть положительной";
             logger.error(message);
             throw new ValidationException(message);
         }

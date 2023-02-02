@@ -30,41 +30,40 @@ public class UserController {
         user.setId(++idCounter);
         users.put(user.getId(), user);
 
-        logger.info(String.format("A new user has been added to the database: %s with id # %d",user.getName(),
-                user.getId()));
+        logger.info(String.format("Новый пользователь добавлен в базу: %s c id # %d.",user.getName(), user.getId()));
+
         return user;
     }
 
     @PutMapping
     public User update(@RequestBody User user) throws ValidationException {
         if (!users.containsKey(user.getId())) {
-            message = "The user with this id does not exist";
+            message = "Пользователь с указанным id отсутствует в базе.";
             logger.error(message);
             throw new ValidationException(message);
         }
         validate(user);
         users.put(user.getId(), user);
 
-        logger.info(String.format("The user has been updated in the database: %s with id # %d", user.getName(),
-                user.getId()));
+        logger.info(String.format("Пользователь с id# %d обновлен в базе: %s.", user.getId(), user.getName()));
         return user;
     }
 
     private void validate (User user) throws ValidationException {
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            message = "The email cannot be empty and must contain the character @";
+            message = "Электронная почта не может быть пустой и должна содержать символ @.";
             logger.error(message);
             throw new ValidationException(message);
         }
 
         if (user.getLogin().isBlank()) {
-            message = "The login cannot be empty and contain spaces";
+            message = "Логин не может быть пустым и содержать пробелы.";
             logger.error(message);
             throw new ValidationException(message);
         }
 
         if (!user.getBirthday().isBefore(LocalDate.now())) {
-            message = "The date of birth cannot be in the future";
+            message = "Дата рождения не может быть в будущем.";
             logger.error(message);
             throw new ValidationException(message);
         }
