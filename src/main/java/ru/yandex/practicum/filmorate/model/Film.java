@@ -5,15 +5,20 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
-import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Film {
-    @NonFinal int id;
+    @NonFinal long id;
     String description;
     String name;
     LocalDate releaseDate;
-    int duration;
+    Integer duration;
+    Set<Long> userLikes = new HashSet<>();
+    public long likes() {
+        return userLikes.size();
+    }
 }
