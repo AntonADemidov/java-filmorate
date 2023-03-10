@@ -16,7 +16,7 @@ public class Film {
     String description;
     String name;
     LocalDate releaseDate;
-    int duration;
+    Integer duration;
     Set<Long> userLikes = new HashSet<>();
     public long likes() {
         return userLikes.size();

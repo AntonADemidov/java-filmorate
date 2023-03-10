@@ -14,6 +14,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final String actionWithFriends = "/{id}/friends/{friendId}";
 
     @Autowired
     public UserController(UserService userService) {
@@ -31,21 +32,21 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) throws ValidationException {
+    public User createUser(@RequestBody User user) throws Exception {
         return userService.createUser(user);
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user) throws ValidationException {
+    public User updateUser(@RequestBody User user) throws Exception {
         return userService.updateUser(user);
     }
 
-    @PutMapping("/{id}/friends/{friendId}")
+    @PutMapping(actionWithFriends)
     public void addFriend(@PathVariable long id, @PathVariable long friendId) {
         userService.addFriend(id, friendId);
     }
 
-    @DeleteMapping("/{id}/friends/{friendId}")
+    @DeleteMapping(actionWithFriends)
     public void removeFriend(@PathVariable long id, @PathVariable long friendId) {
         userService.removeFriend(id, friendId);
     }

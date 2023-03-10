@@ -42,7 +42,7 @@ public class UserService {
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) throws ValidationException {
+    public User createUser(@RequestBody User user) throws Exception {
         validateUser(user);
         user.setId(++idCounter);
         userStorage.createUser(user);
@@ -51,7 +51,7 @@ public class UserService {
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user) throws ValidationException, DataNotFoundException {
+    public User updateUser(@RequestBody User user) throws Exception {
         if (!userStorage.getUsers().containsKey(user.getId())) {
             throw new DataNotFoundException("Пользователь с указанным id отсутствует в базе.");
         }
@@ -61,17 +61,32 @@ public class UserService {
         return user;
     }
 
-    private void validateUser(User user) throws ValidationException {
-        if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-            throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @.");
+    private void validateUser(User user) throws Exception {
+        String text = "Параметр должен быть задан (значение не может быть равно null): ";
+
+        if (user.getEmail() != null) {
+            if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
+                throw new ValidationException("Необходимо добавить электронную почту (параметр email: не может быть пустым" +
+                        " и должен содержать символ @.");
+            }
+        } else {
+            throw new Exception(text + "email.");
         }
 
-        if (user.getLogin().isBlank()) {
-            throw new ValidationException("Логин не может быть пустым и содержать пробелы.");
+        if (user.getLogin() != null) {
+            if (user.getLogin().isBlank()) {
+                throw new ValidationException("Необходимо добавить логин (параметр login: не может быть пустым и содержать пробелы.");
+            }
+        } else {
+            throw new Exception(text + "login.");
         }
 
-        if (!user.getBirthday().isBefore(LocalDate.now())) {
-            throw new ValidationException("Дата рождения не может быть в будущем.");
+        if (user.getBirthday() != null) {
+            if (!user.getBirthday().isBefore(LocalDate.now())) {
+                throw new ValidationException("Необходимо добавить дату рождения (параметр birthday: не может быть в будущем.");
+            }
+        } else {
+            throw new Exception(text + "birthday.");
         }
 
         if (user.getName() == null || user.getName().isBlank()) {

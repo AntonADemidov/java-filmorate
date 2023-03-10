@@ -41,7 +41,7 @@ public class FilmService {
         return filmStorage.getFilmById(filmId);
     }
 
-    public Film createFilm(@RequestBody Film film) throws ValidationException {
+    public Film createFilm(@RequestBody Film film) throws Throwable {
         validateFilm(film);
         film.setId(++idCounter);
         filmStorage.createFilm(film);
@@ -49,7 +49,7 @@ public class FilmService {
         return film;
     }
 
-    public Film updateFilm(@RequestBody Film film) throws ValidationException, DataNotFoundException {
+    public Film updateFilm(@RequestBody Film film) throws Throwable {
         if (!filmStorage.getFilms().containsKey(film.getId())) {
             throw new DataNotFoundException("Фильм с указанным id отсутствует в базе.");
         }
@@ -59,21 +59,39 @@ public class FilmService {
         return film;
     }
 
-    private void validateFilm(Film film) throws ValidationException {
-        if (film.getName().isBlank()) {
-            throw new ValidationException("Название фильма не может быть пустым");
+    private void validateFilm(Film film) throws Exception {
+        String text = "Параметр должен быть задан (значение не может быть равно null): ";
+
+        if (film.getName() != null) {
+            if (film.getName().isBlank()) {
+                throw new ValidationException("Необходимо добавить название фильма (параметр name: не может быть пустым).");
+            }
+        } else {
+            throw new Exception(text + "name.");
         }
 
-        if (!(film.getDescription().length() <= 200)) {
-            throw new ValidationException("Максимальная длина описания - 200 символов");
+        if (film.getDescription() != null) {
+            if (!(film.getDescription().length() <= 200)) {
+                throw new ValidationException("Необходимо добавить описание фильма (параметр description: до 200 символов.");
+            }
+        } else {
+            throw new Exception(text + "description.");
         }
 
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            throw new ValidationException("Дата релиза не может быть ранее 28 декабря 1895 года");
+        if (film.getReleaseDate() != null) {
+            if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+                throw new ValidationException("Необходимо добавить дату релиза (параметр releaseDate: не ранее 28 декабря 1895 года.");
+            }
+        } else {
+            throw new Exception(text + "releaseDate.");
         }
 
-        if (film.getDuration() < 0) {
-            throw new ValidationException("Продолжительность фильма должна быть положительной");
+        if (film.getDuration() != null) {
+            if (film.getDuration() == null || film.getDuration() < 0) {
+                throw new ValidationException("Необходимо добавить продолжительность фильма (параметр duration: положительный).");
+            }
+        } else {
+            throw new Exception(text + "duration.");
         }
     }
 
