@@ -2,8 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -21,16 +20,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public Collection<User> findAllUsers() {
-        return userService.findAllUsers();
-    }
-
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable long id) {
-        return userService.getUserById(id);
-    }
-
     @PostMapping
     public User createUser(@RequestBody User user) throws Exception {
         return userService.createUser(user);
@@ -41,14 +30,24 @@ public class UserController {
         return userService.updateUser(user);
     }
 
-    @PutMapping(actionWithFriends)
-    public void addFriend(@PathVariable long id, @PathVariable long friendId) {
-        userService.addFriend(id, friendId);
+    @GetMapping
+    public Collection<User> findAllUsers() {
+        return userService.findAllUsers();
     }
 
-    @DeleteMapping(actionWithFriends)
-    public void removeFriend(@PathVariable long id, @PathVariable long friendId) {
-        userService.removeFriend(id, friendId);
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable long id) {
+        return userService.getUserById(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable long id, @PathVariable long otherId) {
+        return userService.getCommonFriends(id, otherId);
+    }
+
+    @PutMapping(actionWithFriends)
+    public void addFriend(@PathVariable long id, @PathVariable long friendId) throws DataAlreadyExistException {
+        userService.addFriend(id, friendId);
     }
 
     @GetMapping("/{id}/friends")
@@ -56,8 +55,8 @@ public class UserController {
         return userService.getFriends(id);
     }
 
-    @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable long id, @PathVariable long otherId) {
-        return userService.getCommonFriends(id, otherId);
+    @DeleteMapping(actionWithFriends)
+    public void removeFriend(@PathVariable long id, @PathVariable long friendId) throws DataAlreadyExistException {
+        userService.removeFriend(id, friendId);
     }
 }

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.dao;
 
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public interface UserStorage {
+public interface UserDao {
 
-    User createUser(User user) throws Exception;
+    User createUser(User user);
 
-    User updateUser(User user) throws Exception;
+    User updateUser(User user);
 
     Collection<User> findAllUsers();
 
-    User getUserById(long userId);
+    User getUserById(long id);
 
     Map<Long, User> getUsers();
 
@@ -24,6 +24,7 @@ public interface UserStorage {
 
     List<User> getFriends(long id);
 
-    List<User> getCommonFriends(long userId, long otherUserId);
     void removeFriend(long userId, long friendId) throws DataAlreadyExistException;
+
+    List<User> getCommonFriends(long userId, long otherUserId);
 }
