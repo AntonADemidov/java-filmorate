@@ -30,9 +30,9 @@ public class FilmService {
 
     @PostMapping
     public Film createFilm(@RequestBody Film film) throws Throwable {
-        filmStorage.createFilm(film);
+        Film newFilm = filmStorage.createFilm(film);
         logger.info(String.format("Новый фильм добавлен в базу: %s c id # %d.", film.getName(), film.getId()));
-        return film;
+        return newFilm;
     }
 
     @GetMapping
@@ -42,9 +42,9 @@ public class FilmService {
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) throws Throwable {
-        filmStorage.updateFilm(film);
+        Film newFilm = filmStorage.updateFilm(film);
         logger.info(String.format("Фильм с id # %d обновлен в базе: %s", film.getId(), film.getName()));
-        return film;
+        return newFilm;
     }
 
     @GetMapping

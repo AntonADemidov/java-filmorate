@@ -12,7 +12,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -27,16 +26,16 @@ public class UserService {
 
     @PostMapping
     public User createUser(@RequestBody User user) throws Exception {
-        userStorage.createUser(user);
+        User newUser = userStorage.createUser(user);
         logger.info(String.format("Новый пользователь добавлен в базу: %s c id # %d.",user.getName(), user.getId()));
-        return user;
+        return newUser;
     }
 
     @PutMapping
     public User updateUser(@RequestBody User user) throws Exception {
-        userStorage.updateUser(user);
+        User newUser = userStorage.updateUser(user);
         logger.info(String.format("Пользователь с id# %d обновлен в базе: %s.", user.getId(), user.getName()));
-        return user;
+        return newUser;
     }
 
     @GetMapping
