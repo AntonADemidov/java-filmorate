@@ -60,7 +60,7 @@ public class GenreDaoImpl implements GenreDao {
             log.info("Найден GENRE: {} {}", genre.getId(), genre.getName());
             return genre;
         } else {
-            throw new DataNotFoundException("GENRE с указанным id отсутствует в базе.");
+            throw new DataNotFoundException(String.format("Жанр с id #%d отсутствует в базе", id));
         }
     }
 }

@@ -21,7 +21,6 @@ public class Film {
     Set<Long> userLikes = new HashSet<>();
     List<Genre> genres;
 
-    @Autowired
     public Film(long id, String description, String name, LocalDate releaseDate, Integer duration, Mpa mpa, List<Genre> genres) {
         this.id = id;
         this.description = description;
