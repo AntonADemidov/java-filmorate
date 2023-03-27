@@ -6,27 +6,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserService {
     private final UserStorage userStorage;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private int idCounter = 0;
 
     @Autowired
-    public UserService(InMemoryUserStorage inMemoryUserStorage) {
-        this.userStorage = inMemoryUserStorage;
+    public UserService(UserDbStorage userDbStorage) {
+        this.userStorage = userDbStorage;
+    }
+
+    @PostMapping
+    public User createUser(@RequestBody User user) throws Exception {
+        User newUser = userStorage.createUser(user);
+        logger.info(String.format("Новый пользователь добавлен в базу: %s c id # %d.",user.getName(), user.getId()));
+        return newUser;
+    }
+
+    @PutMapping
+    public User updateUser(@RequestBody User user) throws Exception {
+        User newUser = userStorage.updateUser(user);
+        logger.info(String.format("Пользователь с id# %d обновлен в базе: %s.", user.getId(), user.getName()));
+        return newUser;
     }
 
     @GetMapping
@@ -34,122 +43,29 @@ public class UserService {
         return userStorage.findAllUsers();
     }
 
+    @GetMapping
     public User getUserById(long userId) throws DataNotFoundException {
-        if (!userStorage.getUsers().containsKey(userId)) {
-            throw new DataNotFoundException("Пользователь с указанным id отсутствует в базе.");
-        }
         return userStorage.getUserById(userId);
     }
 
-    @PostMapping
-    public User createUser(@RequestBody User user) throws Exception {
-        validateUser(user);
-        user.setId(++idCounter);
-        userStorage.createUser(user);
-        logger.info(String.format("Новый пользователь добавлен в базу: %s c id # %d.",user.getName(), user.getId()));
-        return user;
+    @GetMapping
+    public List<User> getCommonFriends(long userId, long otherUserId) throws DataNotFoundException {
+        return userStorage.getCommonFriends(userId, otherUserId);
     }
 
     @PutMapping
-    public User updateUser(@RequestBody User user) throws Exception {
-        if (!userStorage.getUsers().containsKey(user.getId())) {
-            throw new DataNotFoundException("Пользователь с указанным id отсутствует в базе.");
-        }
-        validateUser(user);
-        userStorage.createUser(user);
-        logger.info(String.format("Пользователь с id# %d обновлен в базе: %s.", user.getId(), user.getName()));
-        return user;
+    public void addFriend(long userId, long friendId) throws DataAlreadyExistException {
+        userStorage.addFriend(userId, friendId);
     }
 
-    private void validateUser(User user) throws Exception {
-        String text = "Параметр должен быть задан (значение не может быть равно null): ";
-
-        if (user.getEmail() != null) {
-            if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-                throw new ValidationException("Необходимо добавить электронную почту (параметр email: не может быть пустым" +
-                        " и должен содержать символ @.");
-            }
-        } else {
-            throw new Exception(text + "email.");
-        }
-
-        if (user.getLogin() != null) {
-            if (user.getLogin().isBlank()) {
-                throw new ValidationException("Необходимо добавить логин (параметр login: не может быть пустым и содержать пробелы.");
-            }
-        } else {
-            throw new Exception(text + "login.");
-        }
-
-        if (user.getBirthday() != null) {
-            if (!user.getBirthday().isBefore(LocalDate.now())) {
-                throw new ValidationException("Необходимо добавить дату рождения (параметр birthday: не может быть в будущем.");
-            }
-        } else {
-            throw new Exception(text + "birthday.");
-        }
-
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
+    @GetMapping
+    public List<User> getFriends(long id) {
+        return userStorage.getFriends(id);
     }
 
-    public void addFriend(long userId, long friendId) throws DataNotFoundException {
-        validateFriends(userId, friendId);
-        final User user = userStorage.getUsers().get(userId);
-        final User friend = userStorage.getUsers().get(friendId);
-        user.getFriendIds().add(friendId);
-        friend.getFriendIds().add(userId);
-    }
-
-    public void removeFriend(long userId, long friendId) throws DataNotFoundException {
-        validateFriends(userId, friendId);
-        final User user = userStorage.getUsers().get(userId);
-        final User friend = userStorage.getUsers().get(friendId);
-        user.getFriendIds().remove(friendId);
-        friend.getFriendIds().remove(userId);
-    }
-
-    public List<User> getFriends(long userId) {
-        final User user = userStorage.getUsers().get(userId);
-        List<User> friends = new ArrayList<>();
-
-        for (long data : user.getFriendIds()) {
-            friends.add(userStorage.getUsers().get(data));
-        }
-        return friends;
-    }
-
-    private void validateFriends(long userId, long friendId) throws DataNotFoundException  {
-        if (!userStorage.getUsers().containsKey(userId)) {
-            throw new DataNotFoundException(String.format("Пользователь с id # %d отсутствует в базе.", userId));
-        }
-        if (!userStorage.getUsers().containsKey(friendId)) {
-            throw new DataNotFoundException(String.format("Пользователь с id # %d отсутствует в базе.", userId));
-        }
-    }
-
-    public List<User> getCommonFriends(long userId, long otherUserId) throws DataNotFoundException {
-        validateFriends(userId, otherUserId);
-        final Map<Long, User> users = userStorage.getUsers();
-        final User user = users.get(userId);
-        final User otherUser = users.get(otherUserId);
-        final List<User> userFriends = new ArrayList<>();
-        final List<User> otherUserFriends = new ArrayList<>();
-        final List<User> commonFriends = new ArrayList<>();
-
-        for (long data : user.getFriendIds()) {
-            userFriends.add(users.get(data));
-        }
-        for (long data : otherUser.getFriendIds()) {
-            otherUserFriends.add(users.get(data));
-        }
-        for (User data : userFriends) {
-            if (otherUserFriends.contains(data)) {
-                commonFriends.add(data);
-            }
-        }
-        return commonFriends;
+    @DeleteMapping
+    public void removeFriend(long userId, long friendId) throws DataAlreadyExistException {
+        userStorage.removeFriend(userId, friendId);
     }
 
     public UserStorage getUserStorage() {
