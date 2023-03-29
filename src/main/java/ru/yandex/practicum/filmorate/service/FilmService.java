@@ -68,4 +68,8 @@ public class FilmService {
     public void removeLike(long filmId, long userId) throws DataNotFoundException, DataAlreadyExistException {
         filmStorage.removeLike(filmId, userId);
     }
+
+    public List<Film> getRecommendationsFilms(long userId){
+        return filmStorage.getRecommendationsFilms(userId);
+    }
 }

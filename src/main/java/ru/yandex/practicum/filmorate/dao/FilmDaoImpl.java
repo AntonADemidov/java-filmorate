@@ -165,4 +165,38 @@ public class FilmDaoImpl implements FilmDao {
         String sqlQuery = "SELECT F.FILM_ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, F.DURATION, F.MPA_ID FROM FILMS AS F LEFT OUTER JOIN LIKES AS L ON F.FILM_ID = L.FILM_ID GROUP BY F.FILM_ID ORDER BY COUNT(L.USER_ID) DESC LIMIT ?";
         return jdbcTemplate.query(sqlQuery, this::mapRowToFilm, count);
     }
+
+    public List<Film> getRecommendations(long id) {
+        String sqlQuery = "SELECT f.*\n" +
+                "FROM likes AS l\n" +
+                "INNER JOIN films AS f ON l.film_id = f.film_id\n" +
+                "WHERE l.user_id = (SELECT ls.user_id\n" +
+                "                   FROM likes AS ls\n" +
+                "                   WHERE ls.film_id IN (SELECT l2.film_id\n" +
+                "                                        FROM likes l2\n" +
+                "                                        WHERE l2.user_id = ?)\n" +
+                "                   AND ls.user_id != ?\n" +
+                "                   GROUP BY ls.user_id\n" +
+                "                   ORDER BY COUNT(ls.film_id) DESC \n" +
+                "                   LIMIT 1)\n" +
+                "AND l.film_id NOT IN (SELECT l3.film_id\n" +
+                "                      FROM likes l3\n" +
+                "                      WHERE l3.user_id = ?)";
+        List<Film> films = jdbcTemplate.query(sqlQuery, this::mapRowToFilm, id, id, id);
+
+        for (Film film : films) {
+            sqlQuery = "SELECT G.GENRE_ID, G.NAME " +
+                    "FROM FILMS AS F " +
+                    "LEFT OUTER JOIN FILMS_GENRES AS FG ON F.FILM_ID = FG.FILM_ID " +
+                    "LEFT OUTER JOIN GENRES AS G ON FG.GENRE_ID = G.GENRE_ID " +
+                    "WHERE F.FILM_ID = ? " +
+                    "AND G.GENRE_ID " +
+                    "IS NOT NULL ORDER BY G.GENRE_ID ASC";
+            List<Genre> genres = jdbcTemplate.query(sqlQuery, genreDao::mapRowToGenres, film.getId());
+
+            film.getGenres().clear();
+            film.getGenres().addAll(genres);
+        }
+        return films;
+    }
 }

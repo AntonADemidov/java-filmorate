@@ -24,4 +24,6 @@ public interface FilmDao {
     void removeLike(long filmId, long userId) throws DataAlreadyExistException;
 
     List<Film> getPopular(long count);
+
+    List<Film> getRecommendations(long id);
 }

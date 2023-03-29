@@ -345,6 +345,15 @@ class FilmorateApplicationTests {
 
 	@Order(25)
 	@Test
+	public void getListRecommendationsFilms() {
+		List<Film> films = filmDbStorage.getRecommendationsFilms(2);
+
+		assertEquals(1, films.size());
+		assertEquals(2, films.get(0).getId());
+	}
+
+	@Order(26)
+	@Test
 	public void removeLikeTest() throws DataAlreadyExistException {
 		filmDbStorage.removeLike(1, 1);
 		filmDbStorage.removeLike(1, 2);
@@ -355,7 +364,7 @@ class FilmorateApplicationTests {
 		assertEquals(1L, films.get(1).getId());
 	}
 
-	@Order(26)
+	@Order(27)
 	@Test
 	public void getMpaByIdTest() {
 		Mpa mpa = filmDbStorage.getMpaById(1);
@@ -372,14 +381,14 @@ class FilmorateApplicationTests {
 
 	}
 
-	@Order(27)
+	@Order(28)
 	@Test
 	public void getAllMpaTest() throws DataAlreadyExistException {
 		Collection<Mpa> mpaList = filmDbStorage.getAllMpa();
 		assertEquals(5, mpaList.size());
 	}
 
-	@Order(28)
+	@Order(29)
 	@Test
 	public void getGenreByIdTest() {
 		Genre genre = filmDbStorage.getGenreById(1);
@@ -395,14 +404,14 @@ class FilmorateApplicationTests {
 		assertThat(genre3).hasFieldOrPropertyWithValue("name", "Боевик");
 	}
 
-	@Order(29)
+	@Order(30)
 	@Test
 	public void getAllGenreTest() {
 		Collection<Genre> genreList = filmDbStorage.getAllGenres();
 		assertEquals(6, genreList.size());
 	}
 
-	@Order(30)
+	@Order(31)
 	@Test
 	public void updateFilmTest2() throws Exception {
 		Film film = new Film(1,"New film update decription", "Film Updated",
@@ -419,7 +428,7 @@ class FilmorateApplicationTests {
 		assertEquals(1, newFilm.getGenres().size());
 	}
 
-	@Order(31)
+	@Order(32)
 	@Test
 	public void getFilmByIdTest2() {
 		Film newFilm = filmDbStorage.getFilmById(1);
@@ -434,7 +443,7 @@ class FilmorateApplicationTests {
 		assertEquals(1, newFilm.getGenres().size());
 	}
 
-	@Order(32)
+	@Order(33)
 	@Test
 	public void updateFilmTest3() throws Exception {
 		Film film = new Film(1,"New film update decription", "Film Updated",
@@ -451,7 +460,7 @@ class FilmorateApplicationTests {
 		assertEquals(0, newFilm.getGenres().size());
 	}
 
-	@Order(33)
+	@Order(34)
 	@Test
 	public void updateFilmTest4() throws Exception {
 		Film film = new Film(2,"New film about friends", "New film",
@@ -470,7 +479,7 @@ class FilmorateApplicationTests {
 		assertEquals(3, newFilm.getGenres().size());
 	}
 
-	@Order(34)
+	@Order(35)
 	@Test
 	public void updateFilmTest5() throws Exception {
 		Film film = new Film(2,"New film about friends", "New film",

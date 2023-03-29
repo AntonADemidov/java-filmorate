@@ -34,4 +34,6 @@ public interface FilmStorage {
     Collection<Genre> getAllGenres();
 
     Genre getGenreById(int id);
+
+    List<Film> getRecommendationsFilms(long userId);
 }
