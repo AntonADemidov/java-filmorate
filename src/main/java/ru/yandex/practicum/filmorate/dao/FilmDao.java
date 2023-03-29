@@ -32,5 +32,6 @@ public interface FilmDao {
     void deleteFilm(long id);
 
     void deleteAll();
-}
 
+    List<Film> getRecommendations(long id);
+}
