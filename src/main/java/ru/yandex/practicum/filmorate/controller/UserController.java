@@ -81,4 +81,9 @@ public class UserController {
     public void removeFriend(@PathVariable long id, @PathVariable long friendId) throws DataAlreadyExistException {
         userService.removeFriend(id, friendId);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable long id) {
+        userService.deleteUser(id);
+    }
 }

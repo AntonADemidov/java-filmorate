@@ -12,8 +12,10 @@ import java.util.Set;
 @Builder
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class User {
-    @NonFinal long id;
-    @NonFinal String name;
+    @NonFinal
+    long id;
+    @NonFinal
+    String name;
     String email;
     String login;
     LocalDate birthday;

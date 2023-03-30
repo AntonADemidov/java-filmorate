@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.dao;
 
 import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +16,7 @@ public interface GenreDao {
 
     Collection<Genre> getAllGenres();
 
-    Genre mapRowToGenres (ResultSet resultSet, int rowNum) throws SQLException;
+    Genre mapRowToGenres(ResultSet resultSet, int rowNum) throws SQLException;
 
     Genre getGenreById(int id);
 }

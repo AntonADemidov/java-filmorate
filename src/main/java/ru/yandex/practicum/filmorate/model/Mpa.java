@@ -12,7 +12,8 @@ import lombok.experimental.NonFinal;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Mpa {
     Integer id;
-    @NonFinal String name;
+    @NonFinal
+    String name;
 
     public Mpa(Integer id) {
         this.id = id;

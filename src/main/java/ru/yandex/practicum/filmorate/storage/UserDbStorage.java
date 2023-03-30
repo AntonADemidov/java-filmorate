@@ -62,6 +62,10 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getFriends(long id) {
+        if (!getUsers().containsKey(id)) {
+            throw new DataNotFoundException(String.format("Пользователь с id # %d отсутствует в базе.", id));
+        }
+
         return userDao.getFriends(id);
     }
 
@@ -69,6 +73,17 @@ public class UserDbStorage implements UserStorage {
     public void removeFriend(long userId, long friendId) throws DataAlreadyExistException {
         validateFriends(userId, friendId);
         userDao.removeFriend(userId, friendId);
+    }
+
+    @Override
+    public void deleteUser(long id) {
+        userDao.deleteUser(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        idCounter = 0;
+        userDao.deleteAll();
     }
 
     private void validateUser(User user) throws Exception {
@@ -104,7 +119,7 @@ public class UserDbStorage implements UserStorage {
         }
     }
 
-    private void validateFriends(long userId, long friendId) throws DataNotFoundException  {
+    private void validateFriends(long userId, long friendId) throws DataNotFoundException {
         if (!getUsers().containsKey(userId)) {
             throw new DataNotFoundException(String.format("Пользователь с id # %d отсутствует в базе.", userId));
         }

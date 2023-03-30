@@ -77,6 +77,7 @@ public class FilmDbStorage implements FilmStorage {
         return genreDao.getGenreById(id);
     }
 
+
     @Override
     public void addLike(long filmId, long userId) throws DataAlreadyExistException {
         validateFilmAndUser(filmId, userId);
@@ -138,5 +139,26 @@ public class FilmDbStorage implements FilmStorage {
         if (!userStorage.getUsers().containsKey(userId)) {
             throw new DataNotFoundException(String.format("Пользователь с id # %d отсутствует в базе.", userId));
         }
+    }
+
+    @Override
+    public Collection<Film> getDirectorFilmsOrderByLikes(long directorId) {
+        return filmDao.getAllDirectorsFilmsOrderByLikes(directorId);
+    }
+
+    @Override
+    public Collection<Film> getDirectorFilmsOrderByYear(long directorId) {
+        return filmDao.getAllDirectorsFilmsOrderByReleaseDate(directorId);
+    }
+
+    @Override
+    public void deleteFilm(long id) {
+        filmDao.deleteFilm(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        idCounter = 0;
+        filmDao.deleteAll();
     }
 }
