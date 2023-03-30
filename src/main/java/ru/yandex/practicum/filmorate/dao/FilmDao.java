@@ -34,4 +34,6 @@ public interface FilmDao {
     void deleteAll();
 
     List<Film> getRecommendations(long id);
+
+    List<Film> searchFilm(String query, String by);
 }

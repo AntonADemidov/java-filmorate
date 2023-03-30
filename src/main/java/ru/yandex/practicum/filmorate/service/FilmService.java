@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.dao.DirectorDao;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
@@ -87,5 +88,10 @@ public class FilmService {
 
     public List<Film> getRecommendationsFilms(long userId) {
         return filmStorage.getRecommendationsFilms(userId);
+    }
+
+    @GetMapping
+    public List<Film> searchFilm(String query, String by) throws ValidationException {
+        return filmStorage.searchFilm(query, by);
     }
 }

@@ -272,4 +272,58 @@ public class FilmDaoImpl implements FilmDao {
         }
         return films;
     }
+
+    @Override
+    public List<Film> searchFilm(String query, String by) {
+        String lowerCaseQuery = "%" + query.toLowerCase() + "%";
+        List<Film> films = new ArrayList<>();
+
+        if (by.equals("title")) {
+            String sqlQuery = "SELECT F.FILM_ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, F.DURATION, F.MPA_ID " +
+                    "FROM FILMS AS F " +
+                    "LEFT OUTER JOIN LIKES AS L ON F.FILM_ID = L.FILM_ID " +
+                    "WHERE LOWER(F.NAME) LIKE ? " +
+                    "GROUP BY F.FILM_ID " +
+                    "ORDER BY COUNT(L.USER_ID) DESC";
+            films = jdbcTemplate.query(sqlQuery, this::mapRowToFilm, lowerCaseQuery);
+
+            for (Film film : films) {
+                setFilmGenresAndDirectors(film);
+            }
+        }
+
+        if (by.equals("director")) {
+            String sqlQuery = "SELECT F.FILM_ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, F.DURATION, F.MPA_ID " +
+                    "FROM FILMS AS F " +
+                    "LEFT OUTER JOIN LIKES AS L ON F.FILM_ID = L.FILM_ID " +
+                    "LEFT OUTER JOIN FILM_DIRECTORS AS FD ON F.FILM_ID = FD.FILM_ID " +
+                    "LEFT OUTER JOIN DIRECTORS AS D ON FD.DIRECTOR_ID = D.DIRECTOR_ID " +
+                    "WHERE LOWER(D.NAME) LIKE ? " +
+                    "GROUP BY F.FILM_ID " +
+                    "ORDER BY COUNT(L.USER_ID) DESC";
+            films = jdbcTemplate.query(sqlQuery, this::mapRowToFilm, lowerCaseQuery);
+
+            for (Film film : films) {
+                setFilmGenresAndDirectors(film);
+            }
+        }
+
+        if (by.equals("title,director") || by.equals("director,title")) {
+            String sqlQuery = "SELECT F.FILM_ID, F.NAME, F.DESCRIPTION, F.RELEASE_DATE, F.DURATION, F.MPA_ID " +
+                    "FROM FILMS AS F " +
+                    "LEFT OUTER JOIN LIKES AS L ON F.FILM_ID = L.FILM_ID " +
+                    "LEFT OUTER JOIN FILM_DIRECTORS AS FD ON F.FILM_ID = FD.FILM_ID " +
+                    "LEFT OUTER JOIN DIRECTORS AS D ON FD.DIRECTOR_ID = D.DIRECTOR_ID " +
+                    "WHERE LOWER(F.NAME) LIKE ? " +
+                    "OR LOWER(D.NAME) LIKE ? " +
+                    "GROUP BY F.FILM_ID " +
+                    "ORDER BY COUNT(L.USER_ID) DESC";
+            films = jdbcTemplate.query(sqlQuery, this::mapRowToFilm, lowerCaseQuery, lowerCaseQuery);
+
+            for (Film film : films) {
+                setFilmGenresAndDirectors(film);
+            }
+        }
+        return films;
+    }
 }
