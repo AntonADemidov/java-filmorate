@@ -85,7 +85,7 @@ public class FilmService {
         filmStorage.deleteFilm(id);
     }
 
-    public List<Film> getRecommendationsFilms(long userId){
+    public List<Film> getRecommendationsFilms(long userId) {
         return filmStorage.getRecommendationsFilms(userId);
     }
 }
