@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
+import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -66,6 +67,11 @@ public class UserService {
     @DeleteMapping
     public void removeFriend(long userId, long friendId) throws DataAlreadyExistException {
         userStorage.removeFriend(userId, friendId);
+    }
+
+    @GetMapping
+    public List<Feed> getFeeds(long userId) {
+        return userStorage.getFeeds(userId);
     }
 
     public UserStorage getUserStorage() {
