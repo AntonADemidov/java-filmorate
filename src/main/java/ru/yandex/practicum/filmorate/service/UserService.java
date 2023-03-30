@@ -79,7 +79,7 @@ public class UserService {
         userStorage.deleteUser(id);
     }
 
-    public List<Film> recommendationsFilms(long userId){
+    public List<Film> recommendationsFilms(long userId) {
         return filmService.getRecommendationsFilms(userId);
     }
 }

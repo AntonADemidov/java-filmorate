@@ -96,7 +96,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getRecommendationsFilms(long userId){
+    public List<Film> getRecommendationsFilms(long userId) {
         return filmDao.getRecommendations(userId);
     }
 
