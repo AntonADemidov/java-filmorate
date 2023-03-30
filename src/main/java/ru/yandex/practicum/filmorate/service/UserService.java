@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.model.Feed;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -18,11 +19,13 @@ import java.util.*;
 @Service
 public class UserService {
     private final UserStorage userStorage;
+    private final FilmService filmService;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    public UserService(UserDbStorage userDbStorage) {
+    public UserService(UserDbStorage userDbStorage, FilmService filmService) {
         this.userStorage = userDbStorage;
+        this.filmService = filmService;
     }
 
     @PostMapping
@@ -80,5 +83,9 @@ public class UserService {
 
     public void deleteUser(long id) {
         userStorage.deleteUser(id);
+    }
+
+    public List<Film> recommendationsFilms(long userId) {
+        return filmService.getRecommendationsFilms(userId);
     }
 }

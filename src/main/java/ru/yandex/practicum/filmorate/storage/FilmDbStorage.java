@@ -100,6 +100,11 @@ public class FilmDbStorage implements FilmStorage {
         feedDao.removeLike(filmId, userId);
     }
 
+    @Override
+    public List<Film> getRecommendationsFilms(long userId) {
+        return filmDao.getRecommendations(userId);
+    }
+
     private void validateFilm(Film film) throws Exception {
         String text = "Параметр должен быть задан (значение не может быть равно null): ";
 
