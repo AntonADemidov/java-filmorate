@@ -6,26 +6,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.dao.DirectorDao;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
 public class FilmService {
     private final FilmStorage filmStorage;
 
+    private final DirectorDao directorDao;
+
     private static final Logger logger = LoggerFactory.getLogger(FilmController.class);
 
     @Autowired
-    public FilmService(FilmDbStorage filmStorage) {
+    public FilmService(FilmDbStorage filmStorage, DirectorDao directorDao) {
         this.filmStorage = filmStorage;
+        this.directorDao = directorDao;
     }
 
     @PostMapping
@@ -67,5 +71,19 @@ public class FilmService {
     @DeleteMapping
     public void removeLike(long filmId, long userId) throws DataNotFoundException, DataAlreadyExistException {
         filmStorage.removeLike(filmId, userId);
+    }
+
+    public Collection<Film> getDirectorFilmsOrderByLikes(long directorId) {
+        directorDao.getDirectorById(directorId);
+        return filmStorage.getDirectorFilmsOrderByLikes(directorId);
+    }
+
+    public Collection<Film> getDirectorFilmsOrderByYear(long directorId) {
+        directorDao.getDirectorById(directorId);
+        return filmStorage.getDirectorFilmsOrderByYear(directorId);
+    }
+
+    public void deleteFilm(long id) {
+        filmStorage.deleteFilm(id);
     }
 }

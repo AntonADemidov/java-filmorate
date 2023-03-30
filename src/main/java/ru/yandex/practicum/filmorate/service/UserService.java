@@ -71,4 +71,8 @@ public class UserService {
     public UserStorage getUserStorage() {
         return userStorage;
     }
+
+    public void deleteUser(long id) {
+        userStorage.deleteUser(id);
+    }
 }

@@ -34,4 +34,10 @@ public interface FilmStorage {
     Collection<Genre> getAllGenres();
 
     Genre getGenreById(int id);
+
+    Collection<Film> getDirectorFilmsOrderByLikes(long directorId);
+
+    Collection<Film> getDirectorFilmsOrderByYear(long directorId);
+
+    void deleteFilm(long id);
 }

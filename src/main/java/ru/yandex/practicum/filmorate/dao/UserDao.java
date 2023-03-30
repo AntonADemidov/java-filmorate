@@ -26,4 +26,6 @@ public interface UserDao {
     void removeFriend(long userId, long friendId) throws DataAlreadyExistException;
 
     List<User> getCommonFriends(long userId, long otherUserId);
+
+    void deleteUser(long id);
 }
