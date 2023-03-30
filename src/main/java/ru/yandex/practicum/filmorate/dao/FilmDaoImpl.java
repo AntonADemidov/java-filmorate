@@ -248,6 +248,7 @@ public class FilmDaoImpl implements FilmDao {
         jdbcTemplate.update(sql);
     }
 
+    @Override
     public List<Film> getRecommendations(long id) {
         String sqlQuery = "SELECT f.*\n" +
                 "FROM likes AS l\n" +
@@ -267,17 +268,7 @@ public class FilmDaoImpl implements FilmDao {
         List<Film> films = jdbcTemplate.query(sqlQuery, this::mapRowToFilm, id, id, id);
 
         for (Film film : films) {
-            sqlQuery = "SELECT G.GENRE_ID, G.NAME " +
-                    "FROM FILMS AS F " +
-                    "LEFT OUTER JOIN FILMS_GENRES AS FG ON F.FILM_ID = FG.FILM_ID " +
-                    "LEFT OUTER JOIN GENRES AS G ON FG.GENRE_ID = G.GENRE_ID " +
-                    "WHERE F.FILM_ID = ? " +
-                    "AND G.GENRE_ID " +
-                    "IS NOT NULL ORDER BY G.GENRE_ID ASC";
-            List<Genre> genres = jdbcTemplate.query(sqlQuery, genreDao::mapRowToGenres, film.getId());
-
-            film.getGenres().clear();
-            film.getGenres().addAll(genres);
+            setFilmGenresAndDirectors(film);
         }
         return films;
     }

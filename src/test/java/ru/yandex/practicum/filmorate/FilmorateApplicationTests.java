@@ -328,17 +328,17 @@ class FilmorateApplicationTests {
         assertEquals(1L, films.get(1).getId());
     }
 
-//	@Order(24)
-//	@Test
-//	public void addLikeTest2() throws DataAlreadyExistException {
-//		filmDbStorage.addLike(1, 1);
-//		filmDbStorage.addLike(1, 2);
-//
-//		List<Film> films = filmDbStorage.getPopular(10);
-//		assertEquals(2, films.size());
-//		assertEquals(1L, films.get(0).getId());
-//		assertEquals(2L, films.get(1).getId());
-//	}
+	@Order(24)
+	@Test
+	public void addLikeTest2() throws DataAlreadyExistException {
+		filmDbStorage.addLike(1, 1);
+		filmDbStorage.addLike(1, 2);
+
+		List<Film> films = filmDbStorage.getPopular(10);
+		assertEquals(2, films.size());
+		assertEquals(1L, films.get(0).getId());
+		assertEquals(2L, films.get(1).getId());
+	}
 
 	@Order(25)
 	@Test
@@ -378,12 +378,6 @@ class FilmorateApplicationTests {
 
     }
 
-    @Order(27)
-    @Test
-    public void getAllMpaTest() throws DataAlreadyExistException {
-        Collection<Mpa> mpaList = filmDbStorage.getAllMpa();
-        assertEquals(5, mpaList.size());
-    }
 	@Order(28)
 	@Test
 	public void getAllMpaTest() throws DataAlreadyExistException {
