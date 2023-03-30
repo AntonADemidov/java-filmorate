@@ -65,4 +65,9 @@ public class UserController {
     public List<Feed> getFeeds(@PathVariable long id) {
         return userService.getFeeds(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable long id) {
+        userService.deleteUser(id);
+    }
 }

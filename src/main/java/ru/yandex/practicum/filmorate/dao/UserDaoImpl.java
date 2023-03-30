@@ -76,7 +76,7 @@ public class UserDaoImpl implements UserDao {
         return jdbcTemplate.query(sqlQuery, this::mapRowToUser);
     }
 
-    private User mapRowToUser (ResultSet resultSet, int rowNum) throws SQLException {
+    private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
         return User.builder()
                 .id(resultSet.getLong("user_id"))
                 .name(resultSet.getString("name"))
@@ -116,6 +116,18 @@ public class UserDaoImpl implements UserDao {
             }
         }
         return commonFriends;
+    }
+
+    @Override
+    public void deleteUser(long id) {
+        String sqlQuery = "delete from users where user_id = ?";
+        jdbcTemplate.update(sqlQuery, id);
+    }
+
+    @Override
+    public void deleteAll() {
+        String sql = "delete from users CASCADE;";
+        jdbcTemplate.update(sql);
     }
 
     @Override

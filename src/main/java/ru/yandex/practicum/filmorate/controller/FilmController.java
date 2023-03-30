@@ -55,4 +55,22 @@ public class FilmController {
     public void removeLike(@PathVariable long id, @PathVariable long userId) throws DataAlreadyExistException {
         filmService.removeLike(id, userId);
     }
+
+    @GetMapping("/director/{directorId}")
+    public Collection<Film> getDirectorFilms(@PathVariable long directorId, @RequestParam String sortBy) {
+        if (sortBy.equals("likes")) {
+            return filmService.getDirectorFilmsOrderByLikes(directorId);
+        }
+
+        if (sortBy.equals("year")) {
+            return filmService.getDirectorFilmsOrderByYear(directorId);
+        }
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteFilm(@PathVariable long id) {
+        filmService.deleteFilm(id);
+    }
+
 }

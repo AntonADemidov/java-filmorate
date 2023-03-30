@@ -28,5 +28,9 @@ public interface UserStorage {
 
     void removeFriend(long userId, long friendId) throws DataAlreadyExistException;
 
+    void deleteUser(long id);
+
+    void deleteAll();
+
     List<Feed> getFeeds(long userId);
 }
