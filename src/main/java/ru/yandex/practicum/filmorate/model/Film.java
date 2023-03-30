@@ -15,13 +15,13 @@ import java.util.*;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Film {
-    @NonFinal long id;
+    @NonFinal
+    long id;
     String description;
     String name;
     LocalDate releaseDate;
     Integer duration;
     Mpa mpa;
-    //Set<Long> userLikes = new HashSet<>();
     List<Genre> genres;
     List<Director> directors;
 
@@ -44,8 +44,4 @@ public class Film {
         this.duration = duration;
         this.mpa = mpa;
     }
-
-//    //public long getLikes() {
-//        return userLikes.size();
-//    }
 }

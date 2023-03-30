@@ -76,7 +76,7 @@ public class UserDaoImpl implements UserDao {
         return jdbcTemplate.query(sqlQuery, this::mapRowToUser);
     }
 
-    private User mapRowToUser (ResultSet resultSet, int rowNum) throws SQLException {
+    private User mapRowToUser(ResultSet resultSet, int rowNum) throws SQLException {
         return User.builder()
                 .id(resultSet.getLong("user_id"))
                 .name(resultSet.getString("name"))

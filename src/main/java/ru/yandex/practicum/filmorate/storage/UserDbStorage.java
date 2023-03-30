@@ -113,7 +113,7 @@ public class UserDbStorage implements UserStorage {
         }
     }
 
-    private void validateFriends(long userId, long friendId) throws DataNotFoundException  {
+    private void validateFriends(long userId, long friendId) throws DataNotFoundException {
         if (!getUsers().containsKey(userId)) {
             throw new DataNotFoundException(String.format("Пользователь с id # %d отсутствует в базе.", userId));
         }

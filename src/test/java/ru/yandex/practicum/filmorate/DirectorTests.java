@@ -49,7 +49,6 @@ public class DirectorTests {
     }
 
 
-
     @Order(3)
     @Test
     public void addDirectorTest() throws Exception {
@@ -62,7 +61,7 @@ public class DirectorTests {
         filmDbStorage.createFilm(newFilm);
 
         newFilm = new Film(2, "New film update decription", "Film Updated",
-                LocalDate.of(1989, 04, 17), 190, new Mpa(2), List.of(new Genre(2)));
+                LocalDate.of(1989, 4, 17), 190, new Mpa(2), List.of(new Genre(2)));
         newFilm.setDirectors(List.of(director));
         filmDbStorage.createFilm(newFilm);
 

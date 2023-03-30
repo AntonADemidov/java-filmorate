@@ -78,7 +78,6 @@ public class FilmDbStorage implements FilmStorage {
     }
 
 
-
     @Override
     public void addLike(long filmId, long userId) throws DataAlreadyExistException {
         validateFilmAndUser(filmId, userId);

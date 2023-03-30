@@ -1,4 +1,5 @@
 package ru.yandex.practicum.filmorate;
+
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class DeleteUsersAndFilmsTests {
 
         userDbStorage.addFriend(1, 2);
 
-        Film film = new Film(1, "adipisicing", "nisi eiusmod", LocalDate.of(1967, 03, 25), 100, new Mpa(1), new ArrayList<>());
+        Film film = new Film(1, "adipisicing", "nisi eiusmod", LocalDate.of(1967, 3, 25), 100, new Mpa(1), new ArrayList<>());
         film = filmDbStorage.createFilm(film);
 
         filmDbStorage.addLike(1, 1);

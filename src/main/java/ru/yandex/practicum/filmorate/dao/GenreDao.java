@@ -16,7 +16,7 @@ public interface GenreDao {
 
     Collection<Genre> getAllGenres();
 
-    Genre mapRowToGenres (ResultSet resultSet, int rowNum) throws SQLException;
+    Genre mapRowToGenres(ResultSet resultSet, int rowNum) throws SQLException;
 
     Genre getGenreById(int id);
 }

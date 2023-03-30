@@ -27,7 +27,7 @@ public class MpaDaoImpl implements MpaDao {
         return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToMpa, id);
     }
 
-    private Mpa mapRowToMpa (ResultSet resultSet, int rowNum) throws SQLException {
+    private Mpa mapRowToMpa(ResultSet resultSet, int rowNum) throws SQLException {
         return Mpa.builder()
                 .id(resultSet.getInt("mpa_id"))
                 .name(resultSet.getString("name"))

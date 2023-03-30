@@ -27,7 +27,7 @@ public class UserService {
     @PostMapping
     public User createUser(@RequestBody User user) throws Exception {
         User newUser = userStorage.createUser(user);
-        logger.info(String.format("Новый пользователь добавлен в базу: %s c id # %d.",user.getName(), user.getId()));
+        logger.info(String.format("Новый пользователь добавлен в базу: %s c id # %d.", user.getName(), user.getId()));
         return newUser;
     }
 
