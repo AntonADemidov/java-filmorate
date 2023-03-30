@@ -26,4 +26,6 @@ public interface DirectorDao {
     void deleteFilmDirectors(long filmId);
 
     void addFilmDirectors(Film film);
+
+    void deleteAll();
 }

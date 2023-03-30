@@ -88,5 +88,8 @@ public class DirectorTests {
 
         assertEquals(0, filmDbStorage.getDirectorFilmsOrderByLikes(1L).size());
         assertEquals(0, filmDbStorage.getDirectorFilmsOrderByYear(1L).size());
+
+        directorDao.deleteAll();
+        filmDbStorage.deleteAll();
     }
 }

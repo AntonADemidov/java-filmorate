@@ -46,5 +46,8 @@ public class DeleteUsersAndFilmsTests {
 
         filmDbStorage.deleteFilm(1);
         assertEquals(0, filmDbStorage.getFilms().size());
+
+        filmDbStorage.deleteAll();
+        userDbStorage.deleteAll();
     }
 }

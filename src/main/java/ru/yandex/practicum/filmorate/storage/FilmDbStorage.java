@@ -155,4 +155,10 @@ public class FilmDbStorage implements FilmStorage {
     public void deleteFilm(long id) {
         filmDao.deleteFilm(id);
     }
+
+    @Override
+    public void deleteAll() {
+        idCounter = 0;
+        filmDao.deleteAll();
+    }
 }

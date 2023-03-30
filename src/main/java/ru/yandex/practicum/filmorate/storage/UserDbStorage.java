@@ -80,6 +80,12 @@ public class UserDbStorage implements UserStorage {
         userDao.deleteUser(id);
     }
 
+    @Override
+    public void deleteAll() {
+        idCounter = 0;
+        userDao.deleteAll();
+    }
+
     private void validateUser(User user) throws Exception {
         String text = "Параметр должен быть задан (значение не может быть равно null): ";
 

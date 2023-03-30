@@ -30,5 +30,7 @@ public interface FilmDao {
     Collection<Film> getAllDirectorsFilmsOrderByLikes(long id);
 
     void deleteFilm(long id);
+
+    void deleteAll();
 }
 

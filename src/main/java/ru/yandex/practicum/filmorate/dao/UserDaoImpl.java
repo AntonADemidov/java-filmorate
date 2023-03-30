@@ -125,6 +125,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public void deleteAll() {
+        String sql = "delete from users CASCADE;";
+        jdbcTemplate.update(sql);
+    }
+
+    @Override
     public void removeFriend(long userId, long friendId) throws DataAlreadyExistException {
         String sqlQuery = "delete from friends where id = (select id from friends where (user_id = ? and friend_id = ?))";
         jdbcTemplate.update(sqlQuery, userId, friendId);

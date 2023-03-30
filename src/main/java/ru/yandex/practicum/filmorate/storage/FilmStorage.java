@@ -40,4 +40,6 @@ public interface FilmStorage {
     Collection<Film> getDirectorFilmsOrderByYear(long directorId);
 
     void deleteFilm(long id);
+
+    void deleteAll();
 }

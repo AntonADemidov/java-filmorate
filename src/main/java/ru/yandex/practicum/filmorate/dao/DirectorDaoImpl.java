@@ -120,4 +120,11 @@ public class DirectorDaoImpl implements DirectorDao {
             }
         }
     }
+
+    @Override
+    public void deleteAll() {
+        String sql = "delete from directors CASCADE;" +
+                "ALTER TABLE directors ALTER COLUMN director_id RESTART WITH 1";
+        jdbcTemplate.update(sql);
+    }
 }

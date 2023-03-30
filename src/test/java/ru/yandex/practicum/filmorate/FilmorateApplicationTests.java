@@ -486,5 +486,11 @@ class FilmorateApplicationTests {
         assertEquals(2, newFilm.getGenres().size());
     }
 
+    @Order(100)
+    @Test
+    public void deleteAll() {
+        userDbStorage.deleteAll();
+        filmDbStorage.deleteAll();
+    }
 
 }
