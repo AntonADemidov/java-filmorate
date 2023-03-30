@@ -247,4 +247,29 @@ public class FilmDaoImpl implements FilmDao {
         String sql = "delete from films CASCADE;";
         jdbcTemplate.update(sql);
     }
+
+    @Override
+    public List<Film> getRecommendations(long id) {
+        String sqlQuery = "SELECT f.*\n" +
+                "FROM likes AS l\n" +
+                "INNER JOIN films AS f ON l.film_id = f.film_id\n" +
+                "WHERE l.user_id = (SELECT ls.user_id\n" +
+                "                   FROM likes AS ls\n" +
+                "                   WHERE ls.film_id IN (SELECT l2.film_id\n" +
+                "                                        FROM likes l2\n" +
+                "                                        WHERE l2.user_id = ?)\n" +
+                "                   AND ls.user_id != ?\n" +
+                "                   GROUP BY ls.user_id\n" +
+                "                   ORDER BY COUNT(ls.film_id) DESC \n" +
+                "                   LIMIT 1)\n" +
+                "AND l.film_id NOT IN (SELECT l3.film_id\n" +
+                "                      FROM likes l3\n" +
+                "                      WHERE l3.user_id = ?)";
+        List<Film> films = jdbcTemplate.query(sqlQuery, this::mapRowToFilm, id, id, id);
+
+        for (Film film : films) {
+            setFilmGenresAndDirectors(film);
+        }
+        return films;
+    }
 }

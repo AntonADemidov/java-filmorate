@@ -14,7 +14,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
-
 import java.util.*;
 
 @Service
@@ -84,5 +83,9 @@ public class FilmService {
 
     public void deleteFilm(long id) {
         filmStorage.deleteFilm(id);
+    }
+
+    public List<Film> getRecommendationsFilms(long userId) {
+        return filmStorage.getRecommendationsFilms(userId);
     }
 }
