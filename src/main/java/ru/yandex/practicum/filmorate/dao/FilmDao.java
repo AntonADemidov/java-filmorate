@@ -36,4 +36,6 @@ public interface FilmDao {
     List<Film> getRecommendations(long id);
 
     List<Film> searchFilm(String query, String by);
+
+    List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year);
 }

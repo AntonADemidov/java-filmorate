@@ -94,4 +94,8 @@ public class FilmService {
     public List<Film> searchFilm(String query, String by) throws ValidationException {
         return filmStorage.searchFilm(query, by);
     }
+
+    public List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year) {
+        return filmStorage.getAllPopularFilmsOrderByLikes(count, genreId, year);
+    }
 }
