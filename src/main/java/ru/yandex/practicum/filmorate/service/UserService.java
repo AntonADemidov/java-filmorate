@@ -83,7 +83,7 @@ public class UserService {
         return filmService.getRecommendationsFilms(userId);
     }
 
-    public List<Film> GetCommonFilms(long userId, long friendId) {
+    public List<Film> getCommonFilms(long userId, long friendId) {
         userStorage.getUserById(userId);
         userStorage.getUserById(friendId);
         return filmService.getCommonFilms(userId, friendId);
