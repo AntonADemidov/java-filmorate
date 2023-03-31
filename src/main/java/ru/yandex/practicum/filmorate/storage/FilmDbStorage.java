@@ -173,6 +173,11 @@ public class FilmDbStorage implements FilmStorage {
         return filmDao.searchFilm(query, by);
     }
 
+    @Override
+    public List<Film> getCommonFilms(long userId, long friendId) {
+        return filmDao.getCommonFilms(userId, friendId);
+    }
+
     private void validateSearch(String query, String by) throws ValidationException {
         if (query.isBlank() || by.isBlank()) {
             throw new ValidationException(String.format("Поиск по пробелам не осуществляется."));
