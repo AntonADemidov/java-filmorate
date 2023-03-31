@@ -94,4 +94,8 @@ public class FilmService {
     public List<Film> searchFilm(String query, String by) throws ValidationException {
         return filmStorage.searchFilm(query, by);
     }
+
+    public List<Film> getCommonFilms(long userId, long friendId) {
+        return filmStorage.getCommonFilms(userId, friendId);
+    }
 }

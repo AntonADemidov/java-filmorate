@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,11 +16,14 @@ import java.util.List;
 @RequestMapping("/films")
 public class FilmController {
     private final FilmService filmService;
+
+    private final UserService userService;
     private final String actionWithLikes = "/{id}/like/{userId}";
 
     @Autowired
-    public FilmController(FilmService filmService) {
+    public FilmController(FilmService filmService, UserService userService) {
         this.filmService = filmService;
+        this.userService = userService;
     }
 
     @PostMapping
@@ -78,5 +82,12 @@ public class FilmController {
     public List<Film> searchFilm(@RequestParam(value = "query", required = true) String query,
                                  @RequestParam(value = "by", required = true) String by) throws ValidationException {
         return filmService.searchFilm(query, by);
+    }
+
+    @GetMapping("common")
+    public List<Film> getSharedFilms(@RequestParam(value = "userId", required = true) long userId,
+                                     @RequestParam(value = "friendId", required = true) long friendId) {
+
+        return userService.GetCommonFilms(userId, friendId);
     }
 }

@@ -555,6 +555,16 @@ class FilmorateApplicationTests {
         assertEquals(2, films.size());
     }
 
+    @Order(40)
+    @Test
+    public void commonFilms() throws DataAlreadyExistException {
+        filmDbStorage.addLike(1, 1);
+        filmDbStorage.addLike(1, 2);
+
+        List<Film> films = filmDbStorage.getCommonFilms(1, 2);
+        assertEquals(1, films.size());
+    }
+
     @Order(100)
     @Test
     public void deleteAll() {
