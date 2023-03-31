@@ -327,6 +327,23 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
+    public List<Film> getCommonFilms(long userId, long friendId) {
+        String sql = "SELECT F.* " +
+                "FROM FILMS AS F " +
+                "RIGHT JOIN LIKES AS L ON L.FILM_ID = F.FILM_ID " +
+                "WHERE L.FILM_ID IN (SELECT film_id from likes where user_id = ?) " +
+                "   AND L.FILM_ID IN (SELECT film_id from likes where user_id = ?) " +
+                "GROUP BY F.FILM_ID " +
+                "ORDER BY COUNT(L.USER_ID )";
+
+        List<Film> films = jdbcTemplate.query(sql, this::mapRowToFilm, userId, friendId);
+        for (Film film : films) {
+            setFilmGenresAndDirectors(film);
+        }
+        return films;
+    }
+
+    @Override
     public List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year) {
         List<Film> films = new ArrayList<>();
 
