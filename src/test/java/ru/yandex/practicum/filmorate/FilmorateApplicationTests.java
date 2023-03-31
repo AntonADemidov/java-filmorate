@@ -5,7 +5,9 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.dao.DirectorDaoImpl;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
@@ -23,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FilmorateApplicationTests {
     private final UserDbStorage userDbStorage;
     private final FilmDbStorage filmDbStorage;
+
+    private final DirectorDaoImpl directorDao;
 
     @Order(1)
     @Test
@@ -495,11 +499,66 @@ class FilmorateApplicationTests {
         assertEquals(2, newFilm.getGenres().size());
     }
 
+    @Order(36)
+    @Test
+    public void searchFilmTest1() throws ValidationException {
+        List<Film> films = filmDbStorage.searchFilm("DAT", "title");
+        assertEquals(1L, films.get(0).getId());
+    }
+
+    @Order(37)
+    @Test
+    public void searchFilmTest2() throws ValidationException {
+        List<Film> films = filmDbStorage.searchFilm("NO FILM", "title");
+        assertEquals(0, films.size());
+    }
+
+    @Order(38)
+    @Test
+    public void searchFilmTest3() throws Exception {
+        Director director = new Director();
+        director.setName("Steven Spielberg");
+
+        directorDao.createDirector(director);
+        Director addedDirector = directorDao.getDirectorById(1);
+
+        Film film = new Film(3, "New film with director", "New film with director",
+                LocalDate.of(1999, 4, 30), 120, new Mpa(3),
+                List.of(new Genre(1), new Genre(2)));
+
+        film.setDirectors(List.of(addedDirector));
+
+        filmDbStorage.createFilm(film);
+
+        List<Film> films = filmDbStorage.searchFilm("ber", "director");
+        assertEquals(3L, films.get(0).getId());
+    }
+
+    @Order(39)
+    @Test
+    public void searchFilmTest4() throws Exception {
+        Director director = new Director();
+        director.setName("NONAME");
+
+        directorDao.createDirector(director);
+        Director addedDirector = directorDao.getDirectorById(2);
+
+        Film film = new Film(4, "New film with NONAME director", "SEVEN",
+                LocalDate.of(1999, 4, 30), 120, new Mpa(3),
+                List.of(new Genre(1), new Genre(2)));
+
+        film.setDirectors(List.of(addedDirector));
+
+        filmDbStorage.createFilm(film);
+
+        List<Film> films = filmDbStorage.searchFilm("eVeN", "director,title");
+        assertEquals(2, films.size());
+    }
+
     @Order(100)
     @Test
     public void deleteAll() {
         userDbStorage.deleteAll();
         filmDbStorage.deleteAll();
     }
-
 }

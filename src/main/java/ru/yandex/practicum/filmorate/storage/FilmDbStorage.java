@@ -171,4 +171,24 @@ public class FilmDbStorage implements FilmStorage {
         idCounter = 0;
         filmDao.deleteAll();
     }
+
+    @Override
+    public List<Film> searchFilm(String query, String by) throws ValidationException {
+        validateSearch(query, by);
+        return filmDao.searchFilm(query, by);
+    }
+
+    private void validateSearch(String query, String by) throws ValidationException {
+        if (query.isBlank() || by.isBlank()) {
+            throw new ValidationException(String.format("Поиск по пробелам не осуществляется."));
+        }
+
+        if (!by.equals("title")
+                && !by.equals("director")
+                && !by.equals("title,director")
+                && !by.equals("director,title")
+        ) {
+            throw new ValidationException(String.format("Параметры поиска заданы не верно."));
+        }
+    }
 }

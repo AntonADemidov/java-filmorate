@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
@@ -73,4 +74,9 @@ public class FilmController {
         filmService.deleteFilm(id);
     }
 
+    @GetMapping("/search")
+    public List<Film> searchFilm(@RequestParam(value = "query", required = true) String query,
+                                 @RequestParam(value = "by", required = true) String by) throws ValidationException {
+        return filmService.searchFilm(query, by);
+    }
 }
