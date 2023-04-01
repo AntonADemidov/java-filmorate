@@ -45,7 +45,7 @@ public class FeedDaoImpl implements FeedDao {
         }
     }
 
-    private Feed mapRowToFeed (ResultSet resultSet, int rowNum) throws SQLException {
+    private Feed mapRowToFeed(ResultSet resultSet, int rowNum) throws SQLException {
         return Feed.builder()
                 .timestamp(resultSet.getLong("TIME_STAMP"))
                 .userId(resultSet.getLong("USER_ID"))
@@ -78,5 +78,23 @@ public class FeedDaoImpl implements FeedDao {
     public void removeLike(long filmId, long userId) {
         String sqlQuery = "INSERT INTO FEEDS (TIME_STAMP, EVENT_TYPE, OPERATION, USER_ID, ENTITY_ID) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sqlQuery, Instant.now().toEpochMilli(), LIKE, REMOVE, userId, filmId);
+    }
+
+    @Override
+    public void addReview(long userId, long reviewId) {
+        String sqlQuery = "INSERT INTO FEEDS (TIME_STAMP, EVENT_TYPE, OPERATION, USER_ID, ENTITY_ID) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sqlQuery, Instant.now().toEpochMilli(), REVIEW, ADD, userId, reviewId);
+    }
+
+    @Override
+    public void removeReview(long userId, long reviewId) {
+        String sqlQuery = "INSERT INTO FEEDS (TIME_STAMP, EVENT_TYPE, OPERATION, USER_ID, ENTITY_ID) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sqlQuery, Instant.now().toEpochMilli(), REVIEW, REMOVE, userId, reviewId);
+    }
+
+    @Override
+    public void updateReview(long userId, long reviewId) {
+        String sqlQuery = "INSERT INTO FEEDS (TIME_STAMP, EVENT_TYPE, OPERATION, USER_ID, ENTITY_ID) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sqlQuery, Instant.now().toEpochMilli(), REVIEW, UPDATE, userId, reviewId);
     }
 }

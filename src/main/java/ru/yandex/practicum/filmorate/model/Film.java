@@ -5,7 +5,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
 
 @Getter
 @Setter

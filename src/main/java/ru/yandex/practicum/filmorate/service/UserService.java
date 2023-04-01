@@ -14,7 +14,8 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -75,10 +76,6 @@ public class UserService {
     @GetMapping
     public List<Feed> getFeeds(long userId) {
         return userStorage.getFeeds(userId);
-    }
-
-    public UserStorage getUserStorage() {
-        return userStorage;
     }
 
     public void deleteUser(long id) {

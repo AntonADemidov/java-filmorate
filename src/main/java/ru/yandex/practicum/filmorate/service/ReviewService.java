@@ -3,6 +3,8 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.FeedDao;
+import ru.yandex.practicum.filmorate.dao.FeedDaoImpl;
 import ru.yandex.practicum.filmorate.dao.ReviewDao;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -17,12 +19,14 @@ public class ReviewService {
     private final ReviewDao reviewDao;
     private final UserService userService;
     private final FilmService filmService;
+    private final FeedDao feedDao;
 
     @Autowired
-    public ReviewService(ReviewDao reviewDao, UserService userService, FilmService filmService) {
+    public ReviewService(ReviewDao reviewDao, UserService userService, FilmService filmService, FeedDaoImpl feedDaoImpl) {
         this.reviewDao = reviewDao;
         this.userService = userService;
         this.filmService = filmService;
+        this.feedDao = feedDaoImpl;
     }
 
     /**
@@ -32,7 +36,6 @@ public class ReviewService {
      * @return - отзыв
      */
     public Review createReview(Review review) {
-
         User user = userService.getUserById(review.getUserId());
         Film film = filmService.getFilmById(review.getFilmId());
         if (user == null) {
@@ -42,7 +45,9 @@ public class ReviewService {
             throw new DataNotFoundException("Пользователь не найден");
         }
         int newId = reviewDao.createReview(review); //сохранили в БД
-        return reviewDao.getReviewById(newId); //вернули объект отзыв из БД
+        Review newReview = reviewDao.getReviewById(newId); //вернули объект отзыв из БД
+        feedDao.addReview(newReview.getUserId(), newReview.getReviewId());
+        return newReview;
     }
 
     /**
@@ -58,8 +63,9 @@ public class ReviewService {
             throw new DataNotFoundException("Ошибка обновления данных: отзыв не найден");
         }
         int id = reviewDao.updateReview(updatedReview); //обновили данные в хранилище
-
-        return reviewDao.getReviewById(id); //вернули объект отзыв из БД
+        Review newReview = reviewDao.getReviewById(id); //вернули объект отзыв из БД
+        feedDao.updateReview(newReview.getUserId(), newReview.getReviewId());
+        return newReview;
     }
 
     /**
@@ -82,6 +88,7 @@ public class ReviewService {
      * @param id - id отзыва
      */
     public void deleteReviewById(int id) {
+        feedDao.removeReview(reviewDao.getReviewById(id).getUserId(), reviewDao.getReviewById(id).getReviewId());
         reviewDao.deleteReviewById(id);
     }
 

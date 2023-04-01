@@ -61,7 +61,7 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}/dislike/{userId}")
-    public void createReviewDisike(@PathVariable int id, @PathVariable int userId) {
+    public void createReviewDislike(@PathVariable int id, @PathVariable int userId) {
         log.info("Добавлен дизлайк от пользователя id={} на отзыв id = {}", userId, id);
         reviewService.addReviewDislike(id, userId);
     }

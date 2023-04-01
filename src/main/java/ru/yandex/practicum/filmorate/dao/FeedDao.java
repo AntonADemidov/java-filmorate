@@ -1,12 +1,8 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.model.Feed;
-import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public interface FeedDao {
 
@@ -19,4 +15,10 @@ public interface FeedDao {
     void addLike(long filmId, long userId);
 
     void removeLike(long filmId, long userId);
+
+    void addReview(long userId, long reviewId);
+
+    void removeReview(long userId, long reviewId);
+
+    void updateReview(long userId, long reviewId);
 }

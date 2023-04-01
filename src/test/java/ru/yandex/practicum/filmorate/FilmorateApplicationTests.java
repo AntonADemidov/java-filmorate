@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FilmorateApplicationTests {
     private final UserDbStorage userDbStorage;
     private final FilmDbStorage filmDbStorage;
-
     private final DirectorDaoImpl directorDao;
 
     @Order(1)
@@ -571,7 +570,7 @@ class FilmorateApplicationTests {
         assertEquals(2, films.size());
     }
 
-    @Order(40)
+    @Order(41)
     @Test
     public void commonFilms() throws DataAlreadyExistException {
         filmDbStorage.addLike(1, 1);
@@ -579,6 +578,92 @@ class FilmorateApplicationTests {
 
         List<Film> films = filmDbStorage.getCommonFilms(1, 2);
         assertEquals(1, films.size());
+    }
+
+    @Order(42)
+    @Test
+    public void getFeedsTest1() {
+        List<Feed> feeds = userDbStorage.getFeeds(1);
+        assertEquals(7, feeds.size());
+
+        assertEquals(1, feeds.get(0).getEventId());
+        assertEquals(1, feeds.get(0).getUserId());
+        assertEquals(2, feeds.get(0).getEntityId());
+        assertEquals("ADD", feeds.get(0).getOperation());
+        assertEquals("FRIEND", feeds.get(0).getEventType());
+
+        assertEquals(2, feeds.get(1).getEventId());
+        assertEquals(1, feeds.get(1).getUserId());
+        assertEquals(3, feeds.get(1).getEntityId());
+        assertEquals("ADD", feeds.get(1).getOperation());
+        assertEquals("FRIEND", feeds.get(1).getEventType());
+
+        assertEquals(5, feeds.get(2).getEventId());
+        assertEquals(1, feeds.get(2).getUserId());
+        assertEquals(2, feeds.get(2).getEntityId());
+        assertEquals("REMOVE", feeds.get(2).getOperation());
+        assertEquals("FRIEND", feeds.get(2).getEventType());
+
+        assertEquals(6, feeds.get(3).getEventId());
+        assertEquals(1, feeds.get(3).getUserId());
+        assertEquals(2, feeds.get(3).getEntityId());
+        assertEquals("ADD", feeds.get(3).getOperation());
+        assertEquals("LIKE", feeds.get(3).getEventType());
+
+        assertEquals(7, feeds.get(4).getEventId());
+        assertEquals(1, feeds.get(4).getUserId());
+        assertEquals(1, feeds.get(4).getEntityId());
+        assertEquals("ADD", feeds.get(4).getOperation());
+        assertEquals("LIKE", feeds.get(4).getEventType());
+
+        assertEquals(9, feeds.get(5).getEventId());
+        assertEquals(1, feeds.get(5).getUserId());
+        assertEquals(1, feeds.get(5).getEntityId());
+        assertEquals("REMOVE", feeds.get(5).getOperation());
+        assertEquals("LIKE", feeds.get(5).getEventType());
+
+        assertEquals(11, feeds.get(6).getEventId());
+        assertEquals(1, feeds.get(6).getUserId());
+        assertEquals(1, feeds.get(6).getEntityId());
+        assertEquals("ADD", feeds.get(6).getOperation());
+        assertEquals("LIKE", feeds.get(6).getEventType());
+    }
+
+    @Order(43)
+    @Test
+    public void getFeedsTest2() {
+        List<Feed> feeds = userDbStorage.getFeeds(2);
+        assertEquals(5, feeds.size());
+
+        assertEquals(3, feeds.get(0).getEventId());
+        assertEquals(2, feeds.get(0).getUserId());
+        assertEquals(3, feeds.get(0).getEntityId());
+        assertEquals("ADD", feeds.get(0).getOperation());
+        assertEquals("FRIEND", feeds.get(0).getEventType());
+
+        assertEquals(4, feeds.get(1).getEventId());
+        assertEquals(2, feeds.get(1).getUserId());
+        assertEquals(1, feeds.get(1).getEntityId());
+        assertEquals("ADD", feeds.get(1).getOperation());
+        assertEquals("FRIEND", feeds.get(1).getEventType());
+
+        assertEquals(8, feeds.get(2).getEventId());
+        assertEquals(2, feeds.get(2).getUserId());
+        assertEquals(1, feeds.get(2).getEntityId());
+        assertEquals("ADD", feeds.get(2).getOperation());
+        assertEquals("LIKE", feeds.get(2).getEventType());
+
+        assertEquals(10, feeds.get(3).getEventId());
+        assertEquals(2, feeds.get(3).getUserId());
+        assertEquals(1, feeds.get(3).getEntityId());
+        assertEquals("REMOVE", feeds.get(3).getOperation());
+        assertEquals("LIKE", feeds.get(3).getEventType());
+
+        assertEquals(12, feeds.get(4).getEventId());
+        assertEquals(2, feeds.get(4).getUserId());
+        assertEquals(1, feeds.get(4).getEntityId());
+        assertEquals("ADD", feeds.get(4).getOperation());
+        assertEquals("LIKE", feeds.get(4).getEventType());
     }
 
     @Order(100)

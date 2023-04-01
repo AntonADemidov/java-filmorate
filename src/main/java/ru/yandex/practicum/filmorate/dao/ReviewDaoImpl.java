@@ -72,8 +72,8 @@ public class ReviewDaoImpl implements ReviewDao {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(sqlQuery, id);
         if (userRows.next()) {
             review.setReviewId(userRows.getInt("review_id"));
-            review.setFilmId(userRows.getInt("film_id"));
-            review.setUserId(userRows.getInt("user_id"));
+            review.setFilmId(userRows.getLong("film_id"));
+            review.setUserId(userRows.getLong("user_id"));
             review.setContent(userRows.getString("content"));
             review.setUseful(userRows.getInt("useful"));
             review.setIsPositive(userRows.getBoolean("isPositive"));
@@ -251,8 +251,8 @@ public class ReviewDaoImpl implements ReviewDao {
         Review review = new Review();
 
         review.setReviewId(resultSet.getInt("review_id"));
-        review.setFilmId(resultSet.getInt("film_id"));
-        review.setUserId(resultSet.getInt("user_id"));
+        review.setFilmId(resultSet.getLong("film_id"));
+        review.setUserId(resultSet.getLong("user_id"));
         review.setContent(resultSet.getString("content"));
         review.setUseful(resultSet.getInt("useful"));
         review.setIsPositive(resultSet.getBoolean("isPositive"));
