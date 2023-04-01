@@ -165,9 +165,9 @@ public class ReviewDaoImpl implements ReviewDao {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet(sqlQuery, reviewId); //отправка запроса и сохранение результатов в SqlRowSet
         /*превращаем полученные данные в Map<id пользователя, его оценка (лайк-дизлайк)>*/
         while (userRows.next()) { //проходим по всем строкам, извлекаем id пользователя и его оценку и складываем в мапу
-            int user_id = userRows.getInt("user_id"); //извлекаем значение
+            int userId = userRows.getInt("user_id"); //извлекаем значение
             int isUseful = userRows.getInt("isUseful"); //извлекаем значение
-            likes.put(user_id, isUseful);
+            likes.put(userId, isUseful);
         }
         return likes;
     }
