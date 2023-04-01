@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.ReviewDao;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Review;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 
@@ -13,10 +15,14 @@ import java.util.List;
 @Slf4j
 public class ReviewService {
     private final ReviewDao reviewDao;
+    private final UserService userService;
+    private final FilmService filmService;
 
     @Autowired
-    public ReviewService(ReviewDao reviewDao) {
+    public ReviewService(ReviewDao reviewDao, UserService userService, FilmService filmService) {
         this.reviewDao = reviewDao;
+        this.userService = userService;
+        this.filmService = filmService;
     }
 
     /**
@@ -26,6 +32,15 @@ public class ReviewService {
      * @return - отзыв
      */
     public Review createReview(Review review) {
+
+        User user = userService.getUserById(review.getUserId());
+        Film film = filmService.getFilmById(review.getFilmId());
+        if (user == null) {
+            throw new DataNotFoundException("Пользователь не найден");
+        }
+        if (film == null) {
+            throw new DataNotFoundException("Пользователь не найден");
+        }
         int newId = reviewDao.createReview(review); //сохранили в БД
         return reviewDao.getReviewById(newId); //вернули объект отзыв из БД
     }
@@ -63,6 +78,7 @@ public class ReviewService {
 
     /**
      * Удаление отзыва по id
+     *
      * @param id - id отзыва
      */
     public void deleteReviewById(int id) {
@@ -71,39 +87,43 @@ public class ReviewService {
 
     /**
      * Метод добавления лайка от конкретного пользователя на отзыв
+     *
      * @param reviewId - Id отзыва
-     * @param userId - Id пользователя
+     * @param userId   - Id пользователя
      */
-    public void addReviewLike(int reviewId, int userId){
-        reviewDao.createLike(reviewId, userId);
+    public void addReviewLike(int reviewId, int userId) {
+        reviewDao.createLike(reviewId, userId, 1);
     }
 
     /**
      * Метод добавления дизлайка от конкретного пользователя на отзыв
+     *
      * @param reviewId - Id отзыва
-     * @param userId - Id пользователя
+     * @param userId   - Id пользователя
      */
-    public void addReviewDislike(int reviewId, int userId){
-        reviewDao.createDislike(reviewId, userId);
+    public void addReviewDislike(int reviewId, int userId) {
+        reviewDao.createLike(reviewId, userId, -1);
     }
 
 
     /**
      * Метод удаления лайка от конкретного пользователя на отзыв
+     *
      * @param reviewId - Id отзыва
-     * @param userId - Id пользователя
+     * @param userId   - Id пользователя
      */
-    public void removeReviewLike(int reviewId, int userId){
+    public void removeReviewLike(int reviewId, int userId) {
         reviewDao.deleteLike(reviewId, userId);
     }
 
     /**
      * Получение отзывов на фильм.
+     *
      * @param filmId - id фильма. Если 0, то проходим по всем фильмам
-     * @param count - Количество выводимых отзывов
+     * @param count  - Количество выводимых отзывов
      * @return - список отзывов
      */
-    public List<Review> getAllReviews(int filmId, int count){
-        return reviewDao.getReviewsByFilm(filmId,count);
+    public List<Review> getAllReviews(int filmId, int count) {
+        return reviewDao.getReviewsByFilm(filmId, count);
     }
 }

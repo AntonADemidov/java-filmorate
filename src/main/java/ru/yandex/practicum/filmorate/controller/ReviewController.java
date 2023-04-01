@@ -29,7 +29,7 @@ public class ReviewController {
     }
 
     @PostMapping
-    public Review postReview(@RequestBody Review newReview) {
+    public Review postReview(@Valid @RequestBody Review newReview) {
         Review review = reviewService.createReview(newReview);
         log.info("Создан отзыв. Id = {}", review.getReviewId());
         return reviewService.getById(review.getReviewId());

@@ -67,11 +67,11 @@
         isPositive boolean NOT NULL
     );
 
-    CREATE TABLE IF NOT EXISTS review_likes (
+   CREATE TABLE IF NOT EXISTS review_likes (
             review_id integer NOT NULL REFERENCES reviews (review_id) ON DELETE CASCADE,
             user_id integer NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
             isUseful int NOT NULL
-        );
+   );
 
 
 

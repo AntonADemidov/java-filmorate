@@ -13,7 +13,10 @@ import ru.yandex.practicum.filmorate.model.Review;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,17 +46,11 @@ public class ReviewDaoImpl implements ReviewDao {
             useful += like; //суммируем оценки
         }
 
-        String sqlQuery = "update reviews set film_id = ?, user_id = ?, content = ?, useful = ?, isPositive = ? where review_id = ?";
+        String sqlQuery = "update reviews set content = ?, useful = ?,  isPositive = ? where review_id = ?";
         /*заполняем параметры для запроса в БД. Складываем в него обновляемые данные*/
         int reviewId = review.getReviewId();
-        jdbcTemplate.update(sqlQuery, review.getFilmId(), review.getUserId(), review.getContent(), useful, review.isPositive(), reviewId);
-//
-//        /*обновляем данные в таблице review_likes*/
-//        /*удаляем старые данные в таблице review_likes*/
-//        sqlQuery = "delete from review_likes where review_id = ?";
-//        jdbcTemplate.update(sqlQuery, reviewId);
-//        /*добавляем новые данные в таблицу review_likes*/
-//        saveReviewLikes(review);
+        jdbcTemplate.update(sqlQuery, review.getContent(), useful, review.getIsPositive(), reviewId);
+
         return review.getReviewId();
     }
 
@@ -79,7 +76,7 @@ public class ReviewDaoImpl implements ReviewDao {
             review.setUserId(userRows.getInt("user_id"));
             review.setContent(userRows.getString("content"));
             review.setUseful(userRows.getInt("useful"));
-            review.setPositive(userRows.getBoolean("isPositive"));
+            review.setIsPositive(userRows.getBoolean("isPositive"));
         } else {
             throw new DataNotFoundException("Ошибка получения данных: отзыв не найден");
         }
@@ -94,41 +91,28 @@ public class ReviewDaoImpl implements ReviewDao {
         String sqlQuery = "";
 
         if (filmId == 0) {
-            //запрос без ограничение по id
-            sqlQuery = "select * from reviews LIMIT ?;";
-            reviewList = jdbcTemplate.query(sqlQuery, this::mapRowToReview,amount);
+            //запрос без ограничения по id
+            sqlQuery = "select * from reviews ORDER BY useful DESC LIMIT ? ;";
+            reviewList = jdbcTemplate.query(sqlQuery, this::mapRowToReview, amount);
         } else {
             //запрос по конкретному фильму
-            sqlQuery = "select * from reviews where film_id = ? LIMIT ?;";
-            reviewList = jdbcTemplate.query(sqlQuery, this::mapRowToReview, filmId,amount);
+            sqlQuery = "select * from reviews where film_id = ? ORDER BY useful DESC LIMIT ?;";
+            reviewList = jdbcTemplate.query(sqlQuery, this::mapRowToReview, filmId, amount);
         }
         setLikesForReviewList(reviewList); //устанавливаем для всех отзывов их оценки
         return reviewList;
     }
 
     @Override
-    public void createLike(int reviewId, int userId) {
+    public void createLike(int reviewId, int userId, int value) {
         Map<Integer, Integer> likedUsers = this.getLikedUsersByReview(reviewId);//взяли из БД все лайки и дизлайки для Отзыва
-        likedUsers.put(userId, 1); //Добавили новый лайк (или заменили лайк/дизлайк, если оценка уже стоит
+        likedUsers.put(userId, value); //Добавили новый лайк/дизлайк (или заменили лайк/дизлайк, если оценка уже стоит
 
         /*добавляем новые данные в таблицу review_likes*/
         final String sqlInsertQuery = "merge into review_likes(review_id,user_id,isUseful) KEY (review_id,user_id) values(?,?,?)";
         likedUsers.forEach((id, like) -> jdbcTemplate.update(sqlInsertQuery, reviewId, id, like));
 
         /*после добавления лайка пересчитываем популярность отзыва*/
-        updateReview(getReviewById(reviewId)); //при обновлении пересчитывается популярность
-    }
-
-    @Override
-    public void createDislike(int reviewId, int userId) {
-        Map<Integer, Integer> likedUsers = this.getLikedUsersByReview(reviewId);//взяли из БД все лайки и дизлайки для Отзыва
-        likedUsers.put(userId, -1); //Добавили новый дизлайк (или заменили лайк/дизлайк, если оценка уже стоит
-
-        /*добавляем новые данные в таблицу review_likes*/
-        final String sqlInsertQuery = "merge into review_likes(review_id,user_id,isUseful) KEY (review_id,user_id) values(?,?,?)";
-        likedUsers.forEach((id, like) -> jdbcTemplate.update(sqlInsertQuery, reviewId, id, like));
-
-        /*после добавления дизлайка пересчитываем популярность отзыва*/
         updateReview(getReviewById(reviewId)); //при обновлении пересчитывается популярность
     }
 
@@ -271,7 +255,7 @@ public class ReviewDaoImpl implements ReviewDao {
         review.setUserId(resultSet.getInt("user_id"));
         review.setContent(resultSet.getString("content"));
         review.setUseful(resultSet.getInt("useful"));
-        review.setPositive(resultSet.getBoolean("isPositive"));
+        review.setIsPositive(resultSet.getBoolean("isPositive"));
         return review;
     }
 }
