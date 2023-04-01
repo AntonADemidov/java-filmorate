@@ -353,7 +353,23 @@ class FilmorateApplicationTests {
 		assertEquals(2, films.get(0).getId());
 	}
 
-	@Order(26)
+    @Order(26)
+    @Test
+    public void getMostPopularMoviesByYearAndGenreParameter() {
+        List<Film> films = filmDbStorage.getAllPopularFilmsOrderByLikes(2, 1, 1999);
+
+        assertEquals(1, films.size());
+
+        films = filmDbStorage.getAllPopularFilmsOrderByLikes(2, null, 1999);
+
+        assertEquals(1, films.size());
+
+        films = filmDbStorage.getAllPopularFilmsOrderByLikes(2, 1, null);
+
+        assertEquals(1, films.size());
+    }
+
+	@Order(27)
 	@Test
 	public void removeLikeTest() throws DataAlreadyExistException {
 		filmDbStorage.removeLike(1, 1);
@@ -365,7 +381,7 @@ class FilmorateApplicationTests {
         assertEquals(1L, films.get(1).getId());
     }
 
-	@Order(27)
+	@Order(28)
 	@Test
 	public void getMpaByIdTest() {
 		Mpa mpa = filmDbStorage.getMpaById(1);
@@ -382,14 +398,14 @@ class FilmorateApplicationTests {
 
     }
 
-	@Order(28)
+	@Order(29)
 	@Test
 	public void getAllMpaTest() throws DataAlreadyExistException {
 		Collection<Mpa> mpaList = filmDbStorage.getAllMpa();
 		assertEquals(5, mpaList.size());
 	}
 
-	@Order(29)
+	@Order(30)
 	@Test
 	public void getGenreByIdTest() {
 		Genre genre = filmDbStorage.getGenreById(1);
@@ -405,14 +421,14 @@ class FilmorateApplicationTests {
         assertThat(genre3).hasFieldOrPropertyWithValue("name", "Боевик");
     }
 
-	@Order(30)
+	@Order(31)
 	@Test
 	public void getAllGenreTest() {
 		Collection<Genre> genreList = filmDbStorage.getAllGenres();
 		assertEquals(6, genreList.size());
 	}
 
-	@Order(31)
+	@Order(32)
 	@Test
 	public void updateFilmTest2() throws Exception {
 		Film film = new Film(1,"New film update decription", "Film Updated",
@@ -429,7 +445,7 @@ class FilmorateApplicationTests {
         assertEquals(1, newFilm.getGenres().size());
     }
 
-	@Order(32)
+	@Order(33)
 	@Test
 	public void getFilmByIdTest2() {
 		Film newFilm = filmDbStorage.getFilmById(1);
@@ -444,7 +460,7 @@ class FilmorateApplicationTests {
         assertEquals(1, newFilm.getGenres().size());
     }
 
-	@Order(33)
+	@Order(34)
 	@Test
 	public void updateFilmTest3() throws Exception {
 		Film film = new Film(1,"New film update decription", "Film Updated",
@@ -461,7 +477,7 @@ class FilmorateApplicationTests {
         assertEquals(0, newFilm.getGenres().size());
     }
 
-	@Order(34)
+	@Order(35)
 	@Test
 	public void updateFilmTest4() throws Exception {
 		Film film = new Film(2,"New film about friends", "New film",
@@ -480,7 +496,7 @@ class FilmorateApplicationTests {
         assertEquals(3, newFilm.getGenres().size());
     }
 
-	@Order(35)
+	@Order(36)
 	@Test
 	public void updateFilmTest5() throws Exception {
 		Film film = new Film(2,"New film about friends", "New film",
@@ -499,21 +515,21 @@ class FilmorateApplicationTests {
         assertEquals(2, newFilm.getGenres().size());
     }
 
-    @Order(36)
+    @Order(37)
     @Test
     public void searchFilmTest1() throws ValidationException {
         List<Film> films = filmDbStorage.searchFilm("DAT", "title");
         assertEquals(1L, films.get(0).getId());
     }
 
-    @Order(37)
+    @Order(38)
     @Test
     public void searchFilmTest2() throws ValidationException {
         List<Film> films = filmDbStorage.searchFilm("NO FILM", "title");
         assertEquals(0, films.size());
     }
 
-    @Order(38)
+    @Order(39)
     @Test
     public void searchFilmTest3() throws Exception {
         Director director = new Director();
@@ -534,7 +550,7 @@ class FilmorateApplicationTests {
         assertEquals(3L, films.get(0).getId());
     }
 
-    @Order(39)
+    @Order(40)
     @Test
     public void searchFilmTest4() throws Exception {
         Director director = new Director();

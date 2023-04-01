@@ -98,4 +98,8 @@ public class FilmService {
     public List<Film> getCommonFilms(long userId, long friendId) {
         return filmStorage.getCommonFilms(userId, friendId);
     }
+
+    public List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year) {
+        return filmStorage.getAllPopularFilmsOrderByLikes(count, genreId, year);
+    }
 }
