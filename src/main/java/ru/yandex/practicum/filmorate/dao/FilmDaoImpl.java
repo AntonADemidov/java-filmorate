@@ -227,7 +227,6 @@ public class FilmDaoImpl implements FilmDao {
                 "GROUP BY F.FILM_ID " +
                 "ORDER BY COUNT(L.USER_ID)";
 
-
         List<Film> films = jdbcTemplate.query(sql, this::mapRowToFilm, id);
 
         for (Film film : films) {
@@ -341,6 +340,57 @@ public class FilmDaoImpl implements FilmDao {
         for (Film film : films) {
             setFilmGenresAndDirectors(film);
         }
+        return films;
+    }
+
+    @Override
+    public List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year) {
+        List<Film> films = new ArrayList<>();
+
+        if (genreId == null && year != null) {
+            String sql = "SELECT f.* " +
+                    "FROM films AS f " +
+                    "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
+                    "LEFT JOIN films_genres AS g ON f.film_id = g.film_id " +
+                    "WHERE EXTRACT(YEAR FROM f.release_date) = ? " +
+                    "GROUP BY f.film_id " +
+                    "ORDER BY COUNT(l.user_id) DESC " +
+                    "LIMIT ?";
+
+            films = jdbcTemplate.query(sql, this::mapRowToFilm, year, count);
+        }
+
+        if (year == null && genreId != null) {
+            String sql = "SELECT f.* " +
+                    "FROM films AS f " +
+                    "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
+                    "LEFT JOIN films_genres AS g ON f.film_id = g.film_id " +
+                    "WHERE g.genre_id = ? " +
+                    "GROUP BY f.film_id " +
+                    "ORDER BY COUNT(l.user_id) DESC " +
+                    "LIMIT ?";
+
+            films = jdbcTemplate.query(sql, this::mapRowToFilm, genreId, count);
+        }
+
+        if (year != null && genreId != null) {
+            String sql = "SELECT f.* " +
+                    "FROM films AS f " +
+                    "LEFT JOIN likes AS l ON f.film_id = l.film_id " +
+                    "LEFT JOIN films_genres AS g ON f.film_id = g.film_id " +
+                    "WHERE EXTRACT(YEAR FROM f.release_date) = ? " +
+                    "AND g.genre_id = ? " +
+                    "GROUP BY f.film_id " +
+                    "ORDER BY COUNT(l.user_id) DESC " +
+                    "LIMIT ?";
+
+        films = jdbcTemplate.query(sql, this::mapRowToFilm, year, genreId, count);
+        }
+
+        for (Film film : films) {
+            setFilmGenresAndDirectors(film);
+        }
+
         return films;
     }
 }

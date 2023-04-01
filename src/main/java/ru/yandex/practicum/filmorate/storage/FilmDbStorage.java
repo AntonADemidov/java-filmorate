@@ -196,4 +196,9 @@ public class FilmDbStorage implements FilmStorage {
             throw new ValidationException(String.format("Параметры поиска заданы не верно."));
         }
     }
+
+    @Override
+    public List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year) {
+        return filmDao.getAllPopularFilmsOrderByLikes(count, genreId, year);
+    }
 }

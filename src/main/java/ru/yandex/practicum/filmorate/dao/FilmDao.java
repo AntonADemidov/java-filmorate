@@ -38,4 +38,6 @@ public interface FilmDao {
     List<Film> searchFilm(String query, String by);
 
     List<Film> getCommonFilms(long userId, long friendId);
+
+    List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year);
 }

@@ -49,4 +49,6 @@ public interface FilmStorage {
     List<Film> searchFilm(String query, String by) throws ValidationException;
 
     List<Film> getCommonFilms(long userId, long friendId);
+
+    List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year);
 }
