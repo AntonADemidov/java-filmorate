@@ -55,8 +55,8 @@ public class ReviewTests {
     public void testCreateReview() {
         /*создаем и конфигурируем отзыв*/
         Review newReview = new Review();
-        newReview.setFilmId(5);
-        newReview.setUserId(6);
+        newReview.setFilmId(5L);
+        newReview.setUserId(6L);
         newReview.setIsPositive(true);
         newReview.setContent("Отзыв от user6 на film5");
 
@@ -88,8 +88,8 @@ public class ReviewTests {
         /*создаем и конфигурируем отзыв*/
         Review newReview = new Review();
         newReview.setReviewId(1);
-        newReview.setFilmId(1);
-        newReview.setUserId(1);
+        newReview.setFilmId(1L);
+        newReview.setUserId(1L);
         newReview.setIsPositive(false);
         newReview.setContent("ОБНОВЛЕННЫЙ Отзыв 1");
 
