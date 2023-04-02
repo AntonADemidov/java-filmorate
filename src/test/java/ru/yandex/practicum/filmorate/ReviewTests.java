@@ -40,9 +40,9 @@ public class ReviewTests {
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("reviewId", 1))
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 1))
+                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 1L))
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("userId", 1)
+                        assertThat(review).hasFieldOrPropertyWithValue("userId", 1L)
                 ); //проверка, что полученные данные соответствуют ожидаемым
     }
 
@@ -69,9 +69,9 @@ public class ReviewTests {
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("reviewId", 5)) //предудыщие 4 отзыва созданы в sql-скрипте
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 5))
+                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 5L))
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("userId", 6))
+                        assertThat(review).hasFieldOrPropertyWithValue("userId", 6L))
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("isPositive", true))
                 .hasValueSatisfying(review ->
@@ -102,9 +102,9 @@ public class ReviewTests {
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("reviewId", 1)) //предудыщие 4 отзыва созданы в sql-скрипте
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 1))
+                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 1L))
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("userId", 1))
+                        assertThat(review).hasFieldOrPropertyWithValue("userId", 1L))
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("isPositive", false))
                 .hasValueSatisfying(review ->
