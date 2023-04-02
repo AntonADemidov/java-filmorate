@@ -86,7 +86,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<Feed> getFeeds(long userId) {
-        return feedDao.getFeeds(userId);
+        User user = userDao.getUserById(userId);
+        return feedDao.getFeeds(user.getId());
     }
 
     @Override

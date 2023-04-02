@@ -36,13 +36,7 @@ public class FeedDaoImpl implements FeedDao {
                 "LEFT OUTER JOIN EVENTS_TYPES AS ET ON F.EVENT_TYPE = ET.TYPE_ID\n" +
                 "LEFT OUTER JOIN OPERATIONS AS O ON F.OPERATION = O.OPERATION_ID\n" +
                 "WHERE F.USER_ID = ?";
-        List<Feed> feeds = jdbcTemplate.query(sqlQuery, this::mapRowToFeed, userId);
-
-        if (feeds.size() != 0) {
-            return feeds;
-        } else {
-            throw new DataNotFoundException(String.format("Лента событий пользователя с id # %d отсутствует в базе.", userId));
-        }
+        return jdbcTemplate.query(sqlQuery, this::mapRowToFeed, userId);
     }
 
     private Feed mapRowToFeed(ResultSet resultSet, int rowNum) throws SQLException {
