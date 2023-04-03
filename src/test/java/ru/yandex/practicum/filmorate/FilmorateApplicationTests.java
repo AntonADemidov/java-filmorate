@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class FilmorateApplicationTests {
     private final UserDbStorage userDbStorage;
     private final FilmDbStorage filmDbStorage;
