@@ -6,9 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.dao.DirectorDaoImpl;
-import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
-import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.service.ReviewService;
 import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
@@ -62,8 +59,8 @@ class FilmorateApplicationTests {
             assertThat(UserFromList).hasFieldOrPropertyWithValue("name", "est adipisicing");
             assertThat(UserFromList).hasFieldOrPropertyWithValue("login", "doloreUpdate");
             assertThat(UserFromList).hasFieldOrPropertyWithValue("email", "mail@yandex.ru");
-            assertThat(UserFromList).hasFieldOrPropertyWithValue("birthday"
-                    , LocalDate.of(1976, 9, 20));
+            assertThat(UserFromList).hasFieldOrPropertyWithValue("birthday",
+                    LocalDate.of(1976, 9, 20));
         }
 
         User user2 = new User(2, "friend adipisicing", "friend@mail.ru", "friend",
