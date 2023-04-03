@@ -25,7 +25,6 @@ public class FeedDaoImpl implements FeedDao {
     private static final int FRIEND = 2;
     private static final int REVIEW = 3;
 
-
     public FeedDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

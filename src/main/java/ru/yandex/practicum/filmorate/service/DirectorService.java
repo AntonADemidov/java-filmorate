@@ -2,8 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.DirectorDao;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
@@ -17,9 +17,8 @@ import java.util.Collection;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DirectorService {
     DirectorDao directorDao;
-    @NonFinal
-    private long id = 0;
 
+    @Autowired
     public DirectorService(DirectorDao directorDao) {
         this.directorDao = directorDao;
     }

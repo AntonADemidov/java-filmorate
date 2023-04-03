@@ -59,7 +59,7 @@ public class ReviewService {
      * @param updatedReview - обновленный отзыв
      */
     public Review update(Review updatedReview) {
-        Integer updatedReviewId = updatedReview.getReviewId(); //из переданного элемента взали Id
+        int updatedReviewId = updatedReview.getReviewId(); //из переданного элемента взали Id
 
         if (reviewDao.getReviewById(updatedReviewId) == null) { //если не существует - исключение
             log.warn("Ошибка обновления: не найден элемент");

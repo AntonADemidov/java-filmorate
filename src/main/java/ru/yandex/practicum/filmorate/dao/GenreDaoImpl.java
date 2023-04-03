@@ -24,16 +24,6 @@ public class GenreDaoImpl implements GenreDao {
     }
 
     @Override
-    public void validateGenre(Genre genre) {
-
-    }
-
-    @Override
-    public String validateGenre(int id) {
-        return null;
-    }
-
-    @Override
     public Genre createGenre(int id) {
         String sqlQuery = "select * from genres where genre_id = ?";
         return jdbcTemplate.queryForObject(sqlQuery, this::mapRowToGenres, id);

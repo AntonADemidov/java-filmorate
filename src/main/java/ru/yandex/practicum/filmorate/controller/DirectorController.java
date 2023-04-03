@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Director;
@@ -19,6 +20,7 @@ public class DirectorController {
     DirectorService directorService;
     private static final String actionWithId = "/{id}";
 
+    @Autowired
     public DirectorController(DirectorService directorService) {
         this.directorService = directorService;
     }

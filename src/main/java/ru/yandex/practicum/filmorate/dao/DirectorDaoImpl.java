@@ -1,14 +1,10 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -16,10 +12,9 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
-@Slf4j
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DirectorDaoImpl implements DirectorDao {
-    JdbcTemplate jdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
 
     public DirectorDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -30,12 +25,13 @@ public class DirectorDaoImpl implements DirectorDao {
             Director director = new Director();
             director.setId(rs.getLong("director_id"));
             director.setName(rs.getString("name"));
+
             return director;
         };
     }
 
     @Override
-    public void createDirector(Director director) throws ValidationException {
+    public void createDirector(Director director) {
         String sqlQuery = "insert into directors (name) values (?)";
         jdbcTemplate.update(sqlQuery,
                 director.getName());
@@ -51,7 +47,7 @@ public class DirectorDaoImpl implements DirectorDao {
     }
 
     @Override
-    public void updateDirector(Director director) throws ValidationException {
+    public void updateDirector(Director director) {
         String sql = "update directors set name = ? where director_id = ?";
         jdbcTemplate.update(sql,
                 director.getName(),

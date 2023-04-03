@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.FeedDao;
 import ru.yandex.practicum.filmorate.dao.FeedDaoImpl;
@@ -27,6 +28,7 @@ public class UserDbStorage implements UserStorage {
     @NonFinal
     int idCounter = 0;
 
+    @Autowired
     public UserDbStorage(UserDaoImpl userDaoImpl, FeedDaoImpl feedDaoImpl) {
         this.userDao = userDaoImpl;
         this.feedDao = feedDaoImpl;
@@ -78,7 +80,6 @@ public class UserDbStorage implements UserStorage {
         if (!getUsers().containsKey(id)) {
             throw new DataNotFoundException(String.format("Пользователь с id # %d отсутствует в базе.", id));
         }
-
         return userDao.getFriends(id);
     }
 
@@ -108,9 +109,8 @@ public class UserDbStorage implements UserStorage {
 
     private void validateUser(User user) throws Exception {
         if (!user.getBirthday().isBefore(LocalDate.now())) {
-                throw new ValidationException("Необходимо добавить дату рождения (параметр birthday: не может быть в будущем).");
+            throw new ValidationException("Необходимо добавить дату рождения (параметр birthday: не может быть в будущем).");
         }
-
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }

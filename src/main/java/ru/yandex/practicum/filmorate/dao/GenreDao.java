@@ -8,10 +8,6 @@ import java.util.Collection;
 
 public interface GenreDao {
 
-    void validateGenre(Genre genre);
-
-    String validateGenre(int id);
-
     Genre createGenre(int id);
 
     Collection<Genre> getAllGenres();

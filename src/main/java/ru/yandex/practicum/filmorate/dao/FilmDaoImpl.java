@@ -66,7 +66,7 @@ public class FilmDaoImpl implements FilmDao {
                     filmRows.getLong("film_id"),
                     filmRows.getString("description"),
                     filmRows.getString("name"),
-                    filmRows.getDate("release_date").toLocalDate(),
+                    Objects.requireNonNull(filmRows.getDate("release_date")).toLocalDate(),
                     filmRows.getInt("duration"),
                     createMpa(filmRows.getInt("mpa_id")),
                     new ArrayList<>());
@@ -126,7 +126,8 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        Film film = Film.builder()
+
+        return Film.builder()
                 .id(resultSet.getLong("film_id"))
                 .name(resultSet.getString("name"))
                 .description(resultSet.getString("description"))
@@ -135,8 +136,6 @@ public class FilmDaoImpl implements FilmDao {
                 .mpa(createMpa(resultSet.getInt("mpa_id")))
                 .genres(new ArrayList<>())
                 .build();
-
-        return film;
     }
 
     private void setFilmGenresAndDirectors(Film film) {
@@ -180,7 +179,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public void removeLike(long filmId, long userId) throws DataAlreadyExistException {
+    public void removeLike(long filmId, long userId) {
         String sqlQuery = "delete from likes where id = (select id from likes where (film_id = ? and user_id = ?))";
         jdbcTemplate.update(sqlQuery, filmId, userId);
     }
@@ -391,7 +390,6 @@ public class FilmDaoImpl implements FilmDao {
         for (Film film : films) {
             setFilmGenresAndDirectors(film);
         }
-
         return films;
     }
 }

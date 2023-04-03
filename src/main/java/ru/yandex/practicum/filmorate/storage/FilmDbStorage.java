@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.storage;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.*;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
@@ -28,6 +29,7 @@ public class FilmDbStorage implements FilmStorage {
     @NonFinal
     int idCounter = 0;
 
+    @Autowired
     public FilmDbStorage(FilmDaoImpl filmDaoImpl, MpaDaoImpl mpaDaoImpl, GenreDaoImpl genreDaoImpl,
                          FeedDaoImpl feedDaoImpl, UserDbStorage userDbStorage) {
         this.filmDao = filmDaoImpl;
@@ -84,7 +86,6 @@ public class FilmDbStorage implements FilmStorage {
     public Genre getGenreById(int id) {
         return genreDao.getGenreById(id);
     }
-
 
     @Override
     public void addLike(long filmId, long userId) throws DataAlreadyExistException {
@@ -168,7 +169,7 @@ public class FilmDbStorage implements FilmStorage {
 
     private void validateSearch(String query, String by) throws ValidationException {
         if (query.isBlank() || by.isBlank()) {
-            throw new ValidationException(String.format("Поиск по пробелам не осуществляется."));
+            throw new ValidationException("Поиск по пробелам не осуществляется.");
         }
 
         if (!by.equals("title")
@@ -176,7 +177,7 @@ public class FilmDbStorage implements FilmStorage {
                 && !by.equals("title,director")
                 && !by.equals("director,title")
         ) {
-            throw new ValidationException(String.format("Параметры поиска заданы не верно."));
+            throw new ValidationException("Параметры поиска заданы не верно");
         }
     }
 

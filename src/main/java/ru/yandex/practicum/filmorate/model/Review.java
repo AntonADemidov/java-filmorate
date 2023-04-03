@@ -52,7 +52,6 @@ public class Review { //отзывы на фильмы
         values.put("content", content);
         values.put("useful", useful);
         values.put("isPositive", isPositive);
-
         return values;
     }
 

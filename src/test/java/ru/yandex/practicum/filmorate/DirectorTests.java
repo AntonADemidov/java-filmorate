@@ -58,7 +58,6 @@ public class DirectorTests {
         newFilm.setDirectors(List.of(director));
         filmDbStorage.createFilm(newFilm);
 
-
         assertEquals(1, directorDao.getFilmDirectors(2L).size());
         assertEquals("Сергей Бондарчук", directorDao.getFilmDirectors(2L).get(0).getName());
 
