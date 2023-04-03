@@ -22,7 +22,6 @@ public class DeleteUsersAndFilmsTests {
     private final UserDbStorage userDbStorage;
     private final FilmDbStorage filmDbStorage;
 
-    @Order(1)
     @Test
     public void deleteUsersAndFilmsTest() throws Exception {
         User user = new User(1, "Nick Name", "mail@mail.ru", "dolore", LocalDate.of(1946, 8, 20));

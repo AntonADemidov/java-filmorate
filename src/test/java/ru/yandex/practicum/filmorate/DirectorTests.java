@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.dao.DirectorDaoImpl;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
 
@@ -25,34 +24,28 @@ public class DirectorTests {
     private final DirectorDaoImpl directorDao;
     private final FilmDbStorage filmDbStorage;
 
-    @Order(1)
     @Test
-    public void createDirectorTest() throws ValidationException {
+    public void directorTest() throws Exception {
+        //добавляем режиссера
         Director director = new Director();
         director.setName("Steven Spielberg");
 
         directorDao.createDirector(director);
         Director addedDirector = directorDao.getDirectorById(1);
         assertThat(addedDirector).hasFieldOrPropertyWithValue("name", "Steven Spielberg");
-    }
 
-    @Order(2)
-    @Test
-    public void updateDirectorTest() throws ValidationException {
-        Director director = new Director();
+        //обновляем режиссера
+        director = new Director();
         director.setId(1);
         director.setName("Сергей Бондарчук");
 
         directorDao.updateDirector(director);
-        Director addedDirector = directorDao.getDirectorById(1);
+        addedDirector = directorDao.getDirectorById(1);
         assertThat(addedDirector).hasFieldOrPropertyWithValue("name", "Сергей Бондарчук");
-    }
 
 
-    @Order(3)
-    @Test
-    public void addDirectorTest() throws Exception {
-        Director director = directorDao.getDirectorById(1);
+        //добавляем режиссера в фильм
+        director = directorDao.getDirectorById(1);
         Film newFilm = new Film(1, "New film about friends", "New film",
                 LocalDate.of(1999, 4, 30), 120, new Mpa(3),
                 List.of(new Genre(1), new Genre(2), new Genre(3)));
@@ -71,11 +64,8 @@ public class DirectorTests {
 
         assertEquals(2, filmDbStorage.getDirectorFilmsOrderByLikes(1L).size());
         assertEquals(2, filmDbStorage.getDirectorFilmsOrderByYear(1L).size());
-    }
 
-    @Order(4)
-    @Test
-    public void deleteDirectorTest() {
+        //удаляем
         directorDao.deleteDirectorById(1);
 
         Collection<Director> directors = directorDao.getAllDirectors();
@@ -89,6 +79,7 @@ public class DirectorTests {
         assertEquals(0, filmDbStorage.getDirectorFilmsOrderByLikes(1L).size());
         assertEquals(0, filmDbStorage.getDirectorFilmsOrderByYear(1L).size());
 
+        //очищаем
         directorDao.deleteAll();
         filmDbStorage.deleteAll();
     }
