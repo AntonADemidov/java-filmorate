@@ -27,7 +27,6 @@ class FilmorateApplicationTests {
     private final DirectorDaoImpl directorDao;
     private final ReviewService reviewService;
 
-    @Order(1)
     @Test
     public void userTests() throws Exception {
         User user = new User(1, "Nick Name", "mail@mail.ru", "dolore",
