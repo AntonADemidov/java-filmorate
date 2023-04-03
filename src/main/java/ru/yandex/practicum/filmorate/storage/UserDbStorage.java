@@ -1,23 +1,30 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dao.FeedDao;
+import ru.yandex.practicum.filmorate.dao.FeedDaoImpl;
 import ru.yandex.practicum.filmorate.dao.UserDao;
 import ru.yandex.practicum.filmorate.dao.UserDaoImpl;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class UserDbStorage implements UserStorage {
     private final UserDao userDao;
+    private final FeedDao feedDao;
     private int idCounter = 0;
 
-    public UserDbStorage(UserDaoImpl userDaoImpl) {
+    public UserDbStorage(UserDaoImpl userDaoImpl, FeedDaoImpl feedDaoImpl) {
         this.userDao = userDaoImpl;
+        this.feedDao = feedDaoImpl;
     }
 
     @Override
@@ -58,6 +65,7 @@ public class UserDbStorage implements UserStorage {
     public void addFriend(long userId, long friendId) throws DataAlreadyExistException {
         validateFriends(userId, friendId);
         userDao.addFriend(userId, friendId);
+        feedDao.addFriend(userId, friendId);
     }
 
     @Override
@@ -73,6 +81,13 @@ public class UserDbStorage implements UserStorage {
     public void removeFriend(long userId, long friendId) throws DataAlreadyExistException {
         validateFriends(userId, friendId);
         userDao.removeFriend(userId, friendId);
+        feedDao.removeFriend(userId, friendId);
+    }
+
+    @Override
+    public List<Feed> getFeeds(long userId) {
+        User user = userDao.getUserById(userId);
+        return feedDao.getFeeds(user.getId());
     }
 
     @Override

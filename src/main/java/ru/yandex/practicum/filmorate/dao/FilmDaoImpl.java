@@ -384,7 +384,7 @@ public class FilmDaoImpl implements FilmDao {
                     "ORDER BY COUNT(l.user_id) DESC " +
                     "LIMIT ?";
 
-        films = jdbcTemplate.query(sql, this::mapRowToFilm, year, genreId, count);
+            films = jdbcTemplate.query(sql, this::mapRowToFilm, year, genreId, count);
         }
 
         for (Film film : films) {

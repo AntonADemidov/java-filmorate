@@ -40,9 +40,9 @@ public class ReviewTests {
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("reviewId", 1))
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 1))
+                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 1L))
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("userId", 1)
+                        assertThat(review).hasFieldOrPropertyWithValue("userId", 1L)
                 ); //проверка, что полученные данные соответствуют ожидаемым
     }
 
@@ -55,8 +55,8 @@ public class ReviewTests {
     public void testCreateReview() {
         /*создаем и конфигурируем отзыв*/
         Review newReview = new Review();
-        newReview.setFilmId(5);
-        newReview.setUserId(6);
+        newReview.setFilmId(5L);
+        newReview.setUserId(6L);
         newReview.setIsPositive(true);
         newReview.setContent("Отзыв от user6 на film5");
 
@@ -69,9 +69,9 @@ public class ReviewTests {
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("reviewId", 5)) //предудыщие 4 отзыва созданы в sql-скрипте
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 5))
+                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 5L))
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("userId", 6))
+                        assertThat(review).hasFieldOrPropertyWithValue("userId", 6L))
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("isPositive", true))
                 .hasValueSatisfying(review ->
@@ -88,8 +88,8 @@ public class ReviewTests {
         /*создаем и конфигурируем отзыв*/
         Review newReview = new Review();
         newReview.setReviewId(1);
-        newReview.setFilmId(1);
-        newReview.setUserId(1);
+        newReview.setFilmId(1L);
+        newReview.setUserId(1L);
         newReview.setIsPositive(false);
         newReview.setContent("ОБНОВЛЕННЫЙ Отзыв 1");
 
@@ -102,9 +102,9 @@ public class ReviewTests {
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("reviewId", 1)) //предудыщие 4 отзыва созданы в sql-скрипте
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 1))
+                        assertThat(review).hasFieldOrPropertyWithValue("filmId", 1L))
                 .hasValueSatisfying(review ->
-                        assertThat(review).hasFieldOrPropertyWithValue("userId", 1))
+                        assertThat(review).hasFieldOrPropertyWithValue("userId", 1L))
                 .hasValueSatisfying(review ->
                         assertThat(review).hasFieldOrPropertyWithValue("isPositive", false))
                 .hasValueSatisfying(review ->

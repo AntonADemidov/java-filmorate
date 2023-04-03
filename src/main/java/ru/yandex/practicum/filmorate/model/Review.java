@@ -23,9 +23,9 @@ public class Review { //отзывы на фильмы
     @JsonAlias("reviewId")
     private int reviewId; //id Отзыва
     @NotNull
-    private Integer filmId; //id фильма, к которому относится отзыв
+    private Long filmId; //id фильма, к которому относится отзыв
     @NotNull
-    private Integer userId; //id пользователя, оставившего отзыв
+    private Long userId; //id пользователя, оставившего отзыв
     @NotNull
     @Size(min = 1)
     private String content; //текст отзыва

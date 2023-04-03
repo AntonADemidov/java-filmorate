@@ -19,13 +19,16 @@ public class FilmDbStorage implements FilmStorage {
     private final FilmDao filmDao;
     private final MpaDao mpaDao;
     private final GenreDao genreDao;
+    private final FeedDao feedDao;
     private final UserStorage userStorage;
     private int idCounter = 0;
 
-    public FilmDbStorage(FilmDaoImpl filmDaoImpl, MpaDaoImpl mpaDaoImpl, GenreDaoImpl genreDaoImpl, UserDbStorage userDbStorage) {
+    public FilmDbStorage(FilmDaoImpl filmDaoImpl, MpaDaoImpl mpaDaoImpl, GenreDaoImpl genreDaoImpl,
+                         FeedDaoImpl feedDaoImpl, UserDbStorage userDbStorage) {
         this.filmDao = filmDaoImpl;
         this.mpaDao = mpaDaoImpl;
         this.genreDao = genreDaoImpl;
+        this.feedDao = feedDaoImpl;
         this.userStorage = userDbStorage;
     }
 
@@ -82,6 +85,7 @@ public class FilmDbStorage implements FilmStorage {
     public void addLike(long filmId, long userId) throws DataAlreadyExistException {
         validateFilmAndUser(filmId, userId);
         filmDao.addLike(filmId, userId);
+        feedDao.addLike(filmId, userId);
     }
 
     @Override
@@ -93,6 +97,7 @@ public class FilmDbStorage implements FilmStorage {
     public void removeLike(long filmId, long userId) throws DataAlreadyExistException {
         validateFilmAndUser(filmId, userId);
         filmDao.removeLike(filmId, userId);
+        feedDao.removeLike(filmId, userId);
     }
 
     @Override

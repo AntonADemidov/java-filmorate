@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
+import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -71,8 +73,9 @@ public class UserService {
         userStorage.removeFriend(userId, friendId);
     }
 
-    public UserStorage getUserStorage() {
-        return userStorage;
+    @GetMapping
+    public List<Feed> getFeeds(long userId) {
+        return userStorage.getFeeds(userId);
     }
 
     public void deleteUser(long id) {
