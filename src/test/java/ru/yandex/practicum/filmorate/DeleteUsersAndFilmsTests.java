@@ -24,18 +24,18 @@ public class DeleteUsersAndFilmsTests {
 
     @Test
     public void deleteUsersAndFilmsTest() throws Exception {
-        User user = new User(1, "Nick Name", "mail@mail.ru", "dolore"
-                , LocalDate.of(1946, 8, 20));
+        User user = new User(1, "Nick Name", "mail@mail.ru", "dolore",
+                LocalDate.of(1946, 8, 20));
         userDbStorage.createUser(user);
 
-        User friend = new User(2, "friend adipisicing", "friend@mail.ru", "friend"
-                , LocalDate.of(1976, 8, 20));
+        User friend = new User(2, "friend adipisicing", "friend@mail.ru", "friend",
+                LocalDate.of(1976, 8, 20));
         userDbStorage.createUser(friend);
 
         userDbStorage.addFriend(1, 2);
 
-        Film film = new Film(1, "adipisicing", "nisi eiusmod"
-                , LocalDate.of(1967, 3, 25), 100, new Mpa(1), new ArrayList<>());
+        Film film = new Film(1, "adipisicing", "nisi eiusmod",
+                LocalDate.of(1967, 3, 25), 100, new Mpa(1), new ArrayList<>());
         filmDbStorage.createFilm(film);
 
         filmDbStorage.addLike(1, 1);

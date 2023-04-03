@@ -33,8 +33,8 @@ class FilmorateApplicationTests {
     @Order(1)
     @Test
     public void userTests() throws Exception {
-        User user = new User(1, "Nick Name", "mail@mail.ru", "dolore"
-                , LocalDate.of(1946, 8, 20));
+        User user = new User(1, "Nick Name", "mail@mail.ru", "dolore",
+                LocalDate.of(1946, 8, 20));
         User newUser = userDbStorage.createUser(user);
 
         assertThat(newUser).hasFieldOrPropertyWithValue("id", 1L);
@@ -44,8 +44,8 @@ class FilmorateApplicationTests {
         assertThat(newUser).hasFieldOrPropertyWithValue("birthday"
                 , LocalDate.of(1946, 8, 20));
 
-        user = new User(1, "est adipisicing", "mail@yandex.ru", "doloreUpdate"
-                , LocalDate.of(1976, 9, 20));
+        user = new User(1, "est adipisicing", "mail@yandex.ru", "doloreUpdate",
+                LocalDate.of(1976, 9, 20));
         newUser = userDbStorage.updateUser(user);
 
         assertThat(newUser).hasFieldOrPropertyWithValue("id", 1L);
@@ -66,8 +66,8 @@ class FilmorateApplicationTests {
                     , LocalDate.of(1976, 9, 20));
         }
 
-        User user2 = new User(2, "friend adipisicing", "friend@mail.ru", "friend"
-                , LocalDate.of(1976, 8, 20));
+        User user2 = new User(2, "friend adipisicing", "friend@mail.ru", "friend",
+                LocalDate.of(1976, 8, 20));
         userDbStorage.createUser(user2);
 
         User userById2 = userDbStorage.getUserById(2);
@@ -76,11 +76,11 @@ class FilmorateApplicationTests {
         assertThat(userById2).hasFieldOrPropertyWithValue("name", "friend adipisicing");
         assertThat(userById2).hasFieldOrPropertyWithValue("login", "friend");
         assertThat(userById2).hasFieldOrPropertyWithValue("email", "friend@mail.ru");
-        assertThat(userById2).hasFieldOrPropertyWithValue("birthday"
-                , LocalDate.of(1976, 8, 20));
+        assertThat(userById2).hasFieldOrPropertyWithValue("birthday",
+                LocalDate.of(1976, 8, 20));
 
-        User friend = new User(3, "", "friend@common.ru", "common"
-                , LocalDate.of(2000, 8, 20));
+        User friend = new User(3, "", "friend@common.ru", "common",
+                LocalDate.of(2000, 8, 20));
         userDbStorage.createUser(friend);
 
         User userById3 = userDbStorage.getUserById(3);
@@ -89,8 +89,8 @@ class FilmorateApplicationTests {
         assertThat(userById3).hasFieldOrPropertyWithValue("name", "common");
         assertThat(userById3).hasFieldOrPropertyWithValue("login", "common");
         assertThat(userById3).hasFieldOrPropertyWithValue("email", "friend@common.ru");
-        assertThat(userById3).hasFieldOrPropertyWithValue("birthday"
-                , LocalDate.of(2000, 8, 20));
+        assertThat(userById3).hasFieldOrPropertyWithValue("birthday",
+                LocalDate.of(2000, 8, 20));
 
         List<User> commonFriends = userDbStorage.getCommonFriends(1, 2);
         assertEquals(0, commonFriends.size());
@@ -160,21 +160,21 @@ class FilmorateApplicationTests {
         Collection<Film> filmList = filmDbStorage.findAllFilms();
         assertEquals(0, filmList.size());
 
-        Film film = new Film(1, "adipisicing", "nisi eiusmod"
-                , LocalDate.of(1967, 03, 25), 100, new Mpa(1), new ArrayList<>());
+        Film film = new Film(1, "adipisicing", "nisi eiusmod",
+                LocalDate.of(1967, 03, 25), 100, new Mpa(1), new ArrayList<>());
         Film newFilm = filmDbStorage.createFilm(film);
 
         assertThat(newFilm).hasFieldOrPropertyWithValue("id", 1L);
         assertThat(newFilm).hasFieldOrPropertyWithValue("description", "adipisicing");
         assertThat(newFilm).hasFieldOrPropertyWithValue("name", "nisi eiusmod");
-        assertThat(newFilm).hasFieldOrPropertyWithValue("releaseDate"
-                , LocalDate.of(1967, 03, 25));
+        assertThat(newFilm).hasFieldOrPropertyWithValue("releaseDate",
+                LocalDate.of(1967, 03, 25));
         assertThat(newFilm).hasFieldOrPropertyWithValue("duration", 100);
         assertThat(newFilm).hasFieldOrPropertyWithValue("mpa", new Mpa(1, "G"));
         assertEquals(0, newFilm.getGenres().size());
 
-        Film filmUpdate = new Film(1, "New film update decription", "Film Updated"
-                , LocalDate.of(1989, 04, 17), 190, new Mpa(2), new ArrayList<>());
+        Film filmUpdate = new Film(1, "New film update decription", "Film Updated",
+                LocalDate.of(1989, 04, 17), 190, new Mpa(2), new ArrayList<>());
         filmDbStorage.updateFilm(filmUpdate);
 
         newFilm = filmDbStorage.getFilmById(1);
@@ -182,8 +182,8 @@ class FilmorateApplicationTests {
         assertThat(newFilm).hasFieldOrPropertyWithValue("id", 1L);
         assertThat(newFilm).hasFieldOrPropertyWithValue("description", "New film update decription");
         assertThat(newFilm).hasFieldOrPropertyWithValue("name", "Film Updated");
-        assertThat(newFilm).hasFieldOrPropertyWithValue("releaseDate"
-                , LocalDate.of(1989, 04, 17));
+        assertThat(newFilm).hasFieldOrPropertyWithValue("releaseDate",
+                LocalDate.of(1989, 04, 17));
         assertThat(newFilm).hasFieldOrPropertyWithValue("duration", 190);
         assertThat(newFilm).hasFieldOrPropertyWithValue("mpa", new Mpa(2, "PG"));
         assertEquals(0, newFilm.getGenres().size());
@@ -195,8 +195,8 @@ class FilmorateApplicationTests {
             assertThat(filmFromList).hasFieldOrPropertyWithValue("id", 1L);
             assertThat(filmFromList).hasFieldOrPropertyWithValue("description", "New film update decription");
             assertThat(filmFromList).hasFieldOrPropertyWithValue("name", "Film Updated");
-            assertThat(filmFromList).hasFieldOrPropertyWithValue("releaseDate"
-                    , LocalDate.of(1989, 04, 17));
+            assertThat(filmFromList).hasFieldOrPropertyWithValue("releaseDate",
+                    LocalDate.of(1989, 04, 17));
             assertThat(filmFromList).hasFieldOrPropertyWithValue("duration", 190);
             assertThat(filmFromList).hasFieldOrPropertyWithValue("mpa", new Mpa(2, "PG"));
             assertEquals(0, filmFromList.getGenres().size());
@@ -212,8 +212,8 @@ class FilmorateApplicationTests {
         assertThat(newFilm2).hasFieldOrPropertyWithValue("id", 2L);
         assertThat(newFilm2).hasFieldOrPropertyWithValue("description", "New film about friends");
         assertThat(newFilm2).hasFieldOrPropertyWithValue("name", "New film");
-        assertThat(newFilm2).hasFieldOrPropertyWithValue("releaseDate"
-                , LocalDate.of(1999, 4, 30));
+        assertThat(newFilm2).hasFieldOrPropertyWithValue("releaseDate",
+                LocalDate.of(1999, 4, 30));
         assertThat(newFilm2).hasFieldOrPropertyWithValue("duration", 120);
         assertThat(newFilm2).hasFieldOrPropertyWithValue("mpa", new Mpa(3, "PG-13"));
         assertThat(newFilm2).hasFieldOrPropertyWithValue("genres", List.of(new Genre(1, "Комедия")));
@@ -267,8 +267,8 @@ class FilmorateApplicationTests {
         assertThat(newFilmUpdate).hasFieldOrPropertyWithValue("id", 1L);
         assertThat(newFilmUpdate).hasFieldOrPropertyWithValue("description", "New film update decription");
         assertThat(newFilmUpdate).hasFieldOrPropertyWithValue("name", "Film Updated");
-        assertThat(newFilmUpdate).hasFieldOrPropertyWithValue("releaseDate"
-                , LocalDate.of(1989, 04, 17));
+        assertThat(newFilmUpdate).hasFieldOrPropertyWithValue("releaseDate",
+                LocalDate.of(1989, 04, 17));
         assertThat(newFilmUpdate).hasFieldOrPropertyWithValue("duration", 190);
         assertThat(newFilmUpdate).hasFieldOrPropertyWithValue("mpa", new Mpa(2, "PG"));
         assertThat(newFilmUpdate).hasFieldOrPropertyWithValue("genres", List.of(new Genre(2, "Драма")));
@@ -298,13 +298,13 @@ class FilmorateApplicationTests {
         assertThat(filmAfterUpdate).hasFieldOrPropertyWithValue("id", 2L);
         assertThat(filmAfterUpdate).hasFieldOrPropertyWithValue("description", "New film with director");
         assertThat(filmAfterUpdate).hasFieldOrPropertyWithValue("name", "New film with director");
-        assertThat(filmAfterUpdate).hasFieldOrPropertyWithValue("releaseDate"
-                , LocalDate.of(1999, 4, 30));
+        assertThat(filmAfterUpdate).hasFieldOrPropertyWithValue("releaseDate",
+                LocalDate.of(1999, 4, 30));
         assertThat(filmAfterUpdate).hasFieldOrPropertyWithValue("duration", 120);
         assertThat(filmAfterUpdate).hasFieldOrPropertyWithValue("mpa", new Mpa(3, "PG-13"));
         assertThat(filmAfterUpdate).hasFieldOrPropertyWithValue("genres",
-                List.of(new Genre(1, "Комедия"), new Genre(2, "Драма")
-                        , new Genre(3, "Мультфильм")));
+                List.of(new Genre(1, "Комедия"), new Genre(2, "Драма"),
+                        new Genre(3, "Мультфильм")));
         assertEquals(3, filmAfterUpdate.getGenres().size());
 
         List<Film> searchFilm = filmDbStorage.searchFilm("DAT", "title");
