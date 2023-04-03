@@ -38,8 +38,8 @@ class FilmorateApplicationTests {
         assertThat(newUser).hasFieldOrPropertyWithValue("name", "Nick Name");
         assertThat(newUser).hasFieldOrPropertyWithValue("login", "dolore");
         assertThat(newUser).hasFieldOrPropertyWithValue("email", "mail@mail.ru");
-        assertThat(newUser).hasFieldOrPropertyWithValue("birthday"
-                , LocalDate.of(1946, 8, 20));
+        assertThat(newUser).hasFieldOrPropertyWithValue("birthday",
+                LocalDate.of(1946, 8, 20));
 
         user = new User(1, "est adipisicing", "mail@yandex.ru", "doloreUpdate",
                 LocalDate.of(1976, 9, 20));
@@ -49,17 +49,17 @@ class FilmorateApplicationTests {
         assertThat(newUser).hasFieldOrPropertyWithValue("name", "est adipisicing");
         assertThat(newUser).hasFieldOrPropertyWithValue("login", "doloreUpdate");
         assertThat(newUser).hasFieldOrPropertyWithValue("email", "mail@yandex.ru");
-        assertThat(newUser).hasFieldOrPropertyWithValue("birthday"
-                , LocalDate.of(1976, 9, 20));
+        assertThat(newUser).hasFieldOrPropertyWithValue("birthday",
+                LocalDate.of(1976, 9, 20));
 
         Collection<User> users = userDbStorage.findAllUsers();
         assertEquals(1, users.size());
-        for (User UserFromList : users) {
-            assertThat(UserFromList).hasFieldOrPropertyWithValue("id", 1L);
-            assertThat(UserFromList).hasFieldOrPropertyWithValue("name", "est adipisicing");
-            assertThat(UserFromList).hasFieldOrPropertyWithValue("login", "doloreUpdate");
-            assertThat(UserFromList).hasFieldOrPropertyWithValue("email", "mail@yandex.ru");
-            assertThat(UserFromList).hasFieldOrPropertyWithValue("birthday",
+        for (User userFromList : users) {
+            assertThat(userFromList).hasFieldOrPropertyWithValue("id", 1L);
+            assertThat(userFromList).hasFieldOrPropertyWithValue("name", "est adipisicing");
+            assertThat(userFromList).hasFieldOrPropertyWithValue("login", "doloreUpdate");
+            assertThat(userFromList).hasFieldOrPropertyWithValue("email", "mail@yandex.ru");
+            assertThat(userFromList).hasFieldOrPropertyWithValue("birthday",
                     LocalDate.of(1976, 9, 20));
         }
 
