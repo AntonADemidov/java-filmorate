@@ -1,5 +1,8 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.FeedDao;
 import ru.yandex.practicum.filmorate.dao.FeedDaoImpl;
@@ -17,10 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserDbStorage implements UserStorage {
-    private final UserDao userDao;
-    private final FeedDao feedDao;
-    private int idCounter = 0;
+    UserDao userDao;
+    FeedDao feedDao;
+    @NonFinal
+    int idCounter = 0;
 
     public UserDbStorage(UserDaoImpl userDaoImpl, FeedDaoImpl feedDaoImpl) {
         this.userDao = userDaoImpl;
@@ -102,31 +107,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     private void validateUser(User user) throws Exception {
-        String text = "Параметр должен быть задан (значение не может быть равно null): ";
-
-        if (user.getEmail() != null) {
-            if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
-                throw new ValidationException("Необходимо добавить электронную почту (параметр email: не может быть пустым" +
-                        " и должен содержать символ @).");
-            }
-        } else {
-            throw new Exception(text + "email.");
-        }
-
-        if (user.getLogin() != null) {
-            if (user.getLogin().isBlank()) {
-                throw new ValidationException("Необходимо добавить логин (параметр login: не может быть пустым и содержать пробелы).");
-            }
-        } else {
-            throw new Exception(text + "login.");
-        }
-
-        if (user.getBirthday() != null) {
-            if (!user.getBirthday().isBefore(LocalDate.now())) {
+        if (!user.getBirthday().isBefore(LocalDate.now())) {
                 throw new ValidationException("Необходимо добавить дату рождения (параметр birthday: не может быть в будущем).");
-            }
-        } else {
-            throw new Exception(text + "birthday.");
         }
 
         if (user.getName() == null || user.getName().isBlank()) {

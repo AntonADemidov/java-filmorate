@@ -4,6 +4,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,9 +19,14 @@ import java.util.List;
 public class Film {
     @NonFinal
     long id;
+    @NotNull
     String description;
+    @NotNull
+    @NotBlank
     String name;
+    @NotNull
     LocalDate releaseDate;
+    @NotNull
     Integer duration;
     Mpa mpa;
     List<Genre> genres;

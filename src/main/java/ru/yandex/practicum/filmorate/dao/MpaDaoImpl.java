@@ -1,7 +1,8 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -13,9 +14,10 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 @Component
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class MpaDaoImpl implements MpaDao {
-    private final Logger log = LoggerFactory.getLogger(MpaDaoImpl.class);
-    private final JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
     public MpaDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -49,7 +51,7 @@ public class MpaDaoImpl implements MpaDao {
             log.info("Найден MPA: {} {}", mpa.getId(), mpa.getName());
             return mpa;
         } else {
-            throw new DataNotFoundException("MPA с указанным id отсутствует в базе.");
+            throw new DataNotFoundException(String.format("MPA с id #%d отсутствует в базе.", id));
         }
     }
 }

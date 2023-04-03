@@ -1,5 +1,8 @@
 package ru.yandex.practicum.filmorate.dao;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,9 +23,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ReviewDaoImpl implements ReviewDao {
-
-    private final JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ReviewDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -78,7 +82,7 @@ public class ReviewDaoImpl implements ReviewDao {
             review.setUseful(userRows.getInt("useful"));
             review.setIsPositive(userRows.getBoolean("isPositive"));
         } else {
-            throw new DataNotFoundException("Ошибка получения данных: отзыв не найден");
+            throw new DataNotFoundException(String.format("Ошибка получения данных: отзыв c id #%d не найден", id));
         }
         /*Складываем в Отзыв мапу из id пользователей и их оценок, полученных по id отзыва*/
         review.setLikedUsers(getLikesByReview(id));

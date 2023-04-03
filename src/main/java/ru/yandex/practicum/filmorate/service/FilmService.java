@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.dao.DirectorDao;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
@@ -18,12 +18,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class FilmService {
-    private final FilmStorage filmStorage;
-
-    private final DirectorDao directorDao;
-
-    private static final Logger logger = LoggerFactory.getLogger(FilmController.class);
+    FilmStorage filmStorage;
+    DirectorDao directorDao;
 
     @Autowired
     public FilmService(FilmDbStorage filmStorage, DirectorDao directorDao) {
@@ -34,7 +33,7 @@ public class FilmService {
     @PostMapping
     public Film createFilm(@RequestBody Film film) throws Throwable {
         Film newFilm = filmStorage.createFilm(film);
-        logger.info(String.format("Новый фильм добавлен в базу: %s c id # %d.", film.getName(), film.getId()));
+        log.info(String.format("Новый фильм добавлен в базу: %s c id # %d.", film.getName(), film.getId()));
         return newFilm;
     }
 
@@ -46,14 +45,14 @@ public class FilmService {
     @PutMapping
     public Film updateFilm(@RequestBody Film film) throws Throwable {
         Film newFilm = filmStorage.updateFilm(film);
-        logger.info(String.format("Фильм с id # %d обновлен в базе: %s", film.getId(), film.getName()));
+        log.info(String.format("Фильм с id # %d обновлен в базе: %s", film.getId(), film.getName()));
         return newFilm;
     }
 
     @GetMapping
     public Film getFilmById(long filmId) throws DataNotFoundException {
         Film film = filmStorage.getFilmById(filmId);
-        logger.info("Найден фильм: {} {}", film.getId(), film.getName());
+        log.info(String.format("Найден фильм: %d %s", film.getId(), film.getName()));
         return film;
     }
 

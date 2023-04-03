@@ -1,5 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
@@ -9,16 +12,19 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 
 @RestController
 @RequestMapping("/films")
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class FilmController {
-    private final FilmService filmService;
-
-    private final UserService userService;
-    private final String actionWithLikes = "/{id}/like/{userId}";
+    FilmService filmService;
+    UserService userService;
+    private static final String actionWithLikes = "/{id}/like/{userId}";
+    private static final String actionWithId = "/{id}";
 
     @Autowired
     public FilmController(FilmService filmService, UserService userService) {
@@ -27,7 +33,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film createFilm(@RequestBody Film film) throws Throwable {
+    public Film createFilm(@Valid @RequestBody Film film) throws Throwable {
         return filmService.createFilm(film);
     }
 
@@ -37,11 +43,11 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film updateFilm(@RequestBody Film film) throws Throwable {
+    public Film updateFilm(@Valid @RequestBody Film film) throws Throwable {
         return filmService.updateFilm(film);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(actionWithId)
     public Film getFilmById(@PathVariable long id) throws DataNotFoundException {
         return filmService.getFilmById(id);
     }
@@ -79,7 +85,7 @@ public class FilmController {
         return null;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(actionWithId)
     public void deleteFilm(@PathVariable long id) {
         filmService.deleteFilm(id);
     }

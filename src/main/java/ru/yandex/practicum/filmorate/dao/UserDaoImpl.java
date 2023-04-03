@@ -1,7 +1,8 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -14,9 +15,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Component
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserDaoImpl implements UserDao {
-    private final Logger log = LoggerFactory.getLogger(UserDaoImpl.class);
-    private final JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
     public UserDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -39,7 +41,7 @@ public class UserDaoImpl implements UserDao {
 
             return getUserById(user.getId());
         } else {
-            throw new DataNotFoundException("Пользователь с указанным id отсутствует в базе.");
+            throw new DataNotFoundException(String.format("Пользователь с id #%d отсутствует в базе.", user.getId()));
         }
     }
 
@@ -66,7 +68,7 @@ public class UserDaoImpl implements UserDao {
                     userRows.getDate("birthday").toLocalDate());
             return user;
         } else {
-            throw new DataNotFoundException("Пользователь с указанным id отсутствует в базе.");
+            throw new DataNotFoundException(String.format("Пользователь с id #%d отсутствует в базе.", id));
         }
     }
 

@@ -1,5 +1,8 @@
 package ru.yandex.practicum.filmorate.dao;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -13,9 +16,10 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DirectorDaoImpl implements DirectorDao {
-
-    private final JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
     public DirectorDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -26,22 +30,15 @@ public class DirectorDaoImpl implements DirectorDao {
             Director director = new Director();
             director.setId(rs.getLong("director_id"));
             director.setName(rs.getString("name"));
-
             return director;
         };
     }
 
     @Override
     public void createDirector(Director director) throws ValidationException {
-        validation(director);
         String sqlQuery = "insert into directors (name) values (?)";
         jdbcTemplate.update(sqlQuery,
                 director.getName());
-    }
-
-    private void validation(Director director) throws ValidationException {
-        if (director.getName().isBlank())
-            throw new ValidationException("Имя режиссера не может быть пустым");
     }
 
     @Override
@@ -55,7 +52,6 @@ public class DirectorDaoImpl implements DirectorDao {
 
     @Override
     public void updateDirector(Director director) throws ValidationException {
-        validation(director);
         String sql = "update directors set name = ? where director_id = ?";
         jdbcTemplate.update(sql,
                 director.getName(),
@@ -84,14 +80,12 @@ public class DirectorDaoImpl implements DirectorDao {
         SqlRowSet directorRow = jdbcTemplate.queryForRowSet(sql, id);
 
         if (directorRow.next()) {
-
             Director director = new Director();
             director.setId(directorRow.getLong("director_id"));
             director.setName(directorRow.getString("name"));
-
             return director;
         } else {
-            throw new DataNotFoundException("Режиссер с указанным id отсутствует в базе.");
+            throw new DataNotFoundException(String.format("Режиссер с id #%d отсутствует в базе.", id));
         }
     }
 

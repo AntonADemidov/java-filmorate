@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,12 @@ import java.util.List;
 
 @Service
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ReviewService {
-    private final ReviewDao reviewDao;
-    private final UserService userService;
-    private final FilmService filmService;
-    private final FeedDao feedDao;
+    ReviewDao reviewDao;
+    UserService userService;
+    FilmService filmService;
+    FeedDao feedDao;
 
     @Autowired
     public ReviewService(ReviewDao reviewDao, UserService userService, FilmService filmService, FeedDaoImpl feedDaoImpl) {
@@ -39,10 +42,10 @@ public class ReviewService {
         User user = userService.getUserById(review.getUserId());
         Film film = filmService.getFilmById(review.getFilmId());
         if (user == null) {
-            throw new DataNotFoundException("Пользователь не найден");
+            throw new DataNotFoundException(String.format("Пользователь с id #%d не найден", review.getUserId()));
         }
         if (film == null) {
-            throw new DataNotFoundException("Пользователь не найден");
+            throw new DataNotFoundException(String.format("Фильм с id #%d не найден", review.getFilmId()));
         }
         int newId = reviewDao.createReview(review); //сохранили в БД
         Review newReview = reviewDao.getReviewById(newId); //вернули объект отзыв из БД
@@ -60,7 +63,7 @@ public class ReviewService {
 
         if (reviewDao.getReviewById(updatedReviewId) == null) { //если не существует - исключение
             log.warn("Ошибка обновления: не найден элемент");
-            throw new DataNotFoundException("Ошибка обновления данных: отзыв не найден");
+            throw new DataNotFoundException(String.format("Ошибка обновления данных: отзыв с id # %d не найден", updatedReviewId));
         }
         int id = reviewDao.updateReview(updatedReview); //обновили данные в хранилище
         Review newReview = reviewDao.getReviewById(id); //вернули объект отзыв из БД
@@ -77,7 +80,7 @@ public class ReviewService {
     public Review getById(int id) {
         Review review = reviewDao.getReviewById(id);
         if (review == null) {
-            throw new DataNotFoundException("Отзыв не найден");
+            throw new DataNotFoundException(String.format("Отзыв c id #%d не найден", id));
         }
         return review;
     }

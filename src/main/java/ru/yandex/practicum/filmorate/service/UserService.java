@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
 import ru.yandex.practicum.filmorate.model.Feed;
@@ -18,10 +18,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserService {
-    private final UserStorage userStorage;
-    private final FilmService filmService;
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    UserStorage userStorage;
+    FilmService filmService;
 
     @Autowired
     public UserService(UserDbStorage userDbStorage, FilmService filmService) {
@@ -32,14 +33,14 @@ public class UserService {
     @PostMapping
     public User createUser(@RequestBody User user) throws Exception {
         User newUser = userStorage.createUser(user);
-        logger.info(String.format("Новый пользователь добавлен в базу: %s c id # %d.", user.getName(), user.getId()));
+        log.info(String.format("Новый пользователь добавлен в базу: %s c id # %d.", user.getName(), user.getId()));
         return newUser;
     }
 
     @PutMapping
     public User updateUser(@RequestBody User user) throws Exception {
         User newUser = userStorage.updateUser(user);
-        logger.info(String.format("Пользователь с id# %d обновлен в базе: %s.", user.getId(), user.getName()));
+        log.info(String.format("Пользователь с id# %d обновлен в базе: %s.", user.getId(), user.getName()));
         return newUser;
     }
 
