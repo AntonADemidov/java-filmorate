@@ -1,5 +1,9 @@
 package ru.yandex.practicum.filmorate.dao;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -12,10 +16,12 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DirectorDaoImpl implements DirectorDao {
+    JdbcTemplate jdbcTemplate;
 
-    private final JdbcTemplate jdbcTemplate;
-
+    @Autowired
     public DirectorDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

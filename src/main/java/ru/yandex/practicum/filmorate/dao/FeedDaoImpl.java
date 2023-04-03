@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.dao;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Feed;
@@ -17,7 +18,6 @@ import java.util.List;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class FeedDaoImpl implements FeedDao {
     JdbcTemplate jdbcTemplate;
-
     private static final int ADD = 1;
     private static final int REMOVE = 2;
     private static final int UPDATE = 3;
@@ -25,6 +25,7 @@ public class FeedDaoImpl implements FeedDao {
     private static final int FRIEND = 2;
     private static final int REVIEW = 3;
 
+    @Autowired
     public FeedDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

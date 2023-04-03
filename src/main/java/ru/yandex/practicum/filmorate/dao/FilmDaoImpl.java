@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.dao;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ public class FilmDaoImpl implements FilmDao {
     GenreDao genreDao;
     DirectorDao directorDao;
 
+    @Autowired
     public FilmDaoImpl(JdbcTemplate jdbcTemplate, MpaDaoImpl mpaDaoImpl,
                        GenreDaoImpl genreDaoImpl, DirectorDao directorDao) {
 
