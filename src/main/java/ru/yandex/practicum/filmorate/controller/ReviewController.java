@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,16 +14,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/reviews")
 @Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ReviewController {
-
-    private final ReviewService reviewService;
+    ReviewService reviewService;
+    private static final String actionWithId = "/{id}";
+    private static final String actionWithLike = "/{id}/like/{userId}";
+    private static final String actionWithDislike = "/{id}/dislike/{userId}";
 
     @Autowired
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(actionWithId)
     public Review getReview(@PathVariable int id) {
         Review review = reviewService.getById(id);
         log.info("Получен отзыв по id={}", review.getReviewId());
@@ -35,7 +40,7 @@ public class ReviewController {
         return reviewService.getById(review.getReviewId());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(actionWithId)
     public void deleteReview(@PathVariable int id) {
         reviewService.deleteReviewById(id);
         log.info("Удален Отзыв. Id = {}", id);
@@ -54,25 +59,25 @@ public class ReviewController {
         return reviewService.getAllReviews(filmId, count);
     }
 
-    @PutMapping("/{id}/like/{userId}")
+    @PutMapping(actionWithLike)
     public void createReviewLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Добавлен лайк от пользователя id={} на отзыв id = {}", userId, id);
         reviewService.addReviewLike(id, userId);
     }
 
-    @PutMapping("/{id}/dislike/{userId}")
+    @PutMapping(actionWithDislike)
     public void createReviewDislike(@PathVariable int id, @PathVariable int userId) {
         log.info("Добавлен дизлайк от пользователя id={} на отзыв id = {}", userId, id);
         reviewService.addReviewDislike(id, userId);
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
+    @DeleteMapping(actionWithLike)
     public void deleteReviewLike(@PathVariable int id, @PathVariable int userId) {
         log.info("Удален лайк от пользователя id={} на отзыв id = {}", userId, id);
         reviewService.removeReviewLike(id, userId);
     }
 
-    @DeleteMapping("/{id}/dislike/{userId}")
+    @DeleteMapping(actionWithDislike)
     public void deleteReviewDislike(@PathVariable int id, @PathVariable int userId) {
         log.info("Удален дизлайк от пользователя id={} на отзыв id = {}", userId, id);
         reviewService.removeReviewLike(id, userId);

@@ -3,7 +3,9 @@ package ru.yandex.practicum.filmorate.model;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Review { //отзывы на фильмы
 
     public Review() {
@@ -21,20 +24,20 @@ public class Review { //отзывы на фильмы
     }
 
     @JsonAlias("reviewId")
-    private int reviewId; //id Отзыва
+    int reviewId; //id Отзыва
     @NotNull
-    private Long filmId; //id фильма, к которому относится отзыв
+    Long filmId; //id фильма, к которому относится отзыв
     @NotNull
-    private Long userId; //id пользователя, оставившего отзыв
+    Long userId; //id пользователя, оставившего отзыв
     @NotNull
     @Size(min = 1)
-    private String content; //текст отзыва
-    private int useful; //полезность отзыва. Значение основано на лайках этого отзыва
+    String content; //текст отзыва
+    int useful; //полезность отзыва. Значение основано на лайках этого отзыва
     @NotNull
     @JsonProperty("isPositive")
-    private Boolean isPositive; //положительный или отрицательный отзыв
+    Boolean isPositive; //положительный или отрицательный отзыв
     @JsonIgnore
-    private Map<Integer, Integer> likedUsers; //мап из id пользователей, лайкнувших отзыв, и их оценки: лайк +1, дизлайк -1
+    Map<Integer, Integer> likedUsers; //мап из id пользователей, лайкнувших отзыв, и их оценки: лайк +1, дизлайк -1
 
     /**
      * Преобразование объекта Review в HashMap
@@ -49,7 +52,6 @@ public class Review { //отзывы на фильмы
         values.put("content", content);
         values.put("useful", useful);
         values.put("isPositive", isPositive);
-
         return values;
     }
 

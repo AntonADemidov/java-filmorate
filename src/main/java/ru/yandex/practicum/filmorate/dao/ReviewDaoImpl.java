@@ -1,5 +1,8 @@
 package ru.yandex.practicum.filmorate.dao;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,9 +23,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ReviewDaoImpl implements ReviewDao {
-
-    private final JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ReviewDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -78,7 +82,7 @@ public class ReviewDaoImpl implements ReviewDao {
             review.setUseful(userRows.getInt("useful"));
             review.setIsPositive(userRows.getBoolean("isPositive"));
         } else {
-            throw new DataNotFoundException("Ошибка получения данных: отзыв не найден");
+            throw new DataNotFoundException(String.format("Ошибка получения данных: отзыв c id #%d не найден", id));
         }
         /*Складываем в Отзыв мапу из id пользователей и их оценок, полученных по id отзыва*/
         review.setLikedUsers(getLikesByReview(id));
@@ -87,8 +91,8 @@ public class ReviewDaoImpl implements ReviewDao {
 
     @Override
     public List<Review> getReviewsByFilm(int filmId, int amount) {
-        List<Review> reviewList = new ArrayList<>();
-        String sqlQuery = "";
+        List<Review> reviewList;
+        String sqlQuery;
 
         if (filmId == 0) {
             //запрос без ограничения по id
@@ -130,7 +134,7 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
 
-    /**
+    /*
      * Получение из БД всех пользователей, лайкнувших отзыв.
      *
      * @param reviewId - id отзыва
@@ -148,7 +152,7 @@ public class ReviewDaoImpl implements ReviewDao {
         return users;
     }
 
-    /**
+    /*
      * Получение из БД всех оценок, соответствующих отзыву.
      *
      * @param reviewId - id Отзыва
@@ -172,11 +176,12 @@ public class ReviewDaoImpl implements ReviewDao {
         return likes;
     }
 
-    /**
+    /*
      * Сохранение в БД в таблицу review_likes оценок переданного отзыва.
      *
      * @param review - отзыв, оценки которого надо сохранить в БД
      */
+
     private void saveReviewLikes(Review review) {
         if (review == null || review.getLikedUsers().isEmpty()) {
             return;
@@ -202,43 +207,40 @@ public class ReviewDaoImpl implements ReviewDao {
                 });
     }
 
-    /**
+    /*
      * Добавление лайков к каждому отзыву из списка отзывов (через таблицу review_likes).
      *
      * @param reviewList - список отзывов
      */
     private void setLikesForReviewList(List<Review> reviewList) {
         /*из списка отзывов получаем список их id. И создаем строку для условия запроса*/
-        List<String> reviewIdlist = reviewList.stream()
+        List<String> reviewIdList = reviewList.stream()
                 .map(f -> String.valueOf(f.getReviewId()))
                 .collect(Collectors.toList());
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("(");
-        if (reviewIdlist.size() != 0) {
-            reviewIdlist.forEach(f -> stringBuilder.append(f + ","));
+        if (reviewIdList.size() != 0) {
+            reviewIdList.forEach(f -> stringBuilder.append(f).append(","));
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
         stringBuilder.append(")");
 
         String sql = "SELECT review_id, user_id, isUseful " +
                 "FROM review_likes " +
-                "WHERE user_id IN " + stringBuilder.toString() + ";";
+                "WHERE user_id IN " + stringBuilder + ";";
 
         /*преобразуем ArrayList в мапу <id, review>*/
         Map<Integer, Review> reviewMap = reviewList.stream().collect(Collectors.toMap(Review::getReviewId, review -> review));
-        RowCallbackHandler rowCallbackHandler = new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet rs) throws SQLException {
-                int userId = rs.getInt("user_id");
-                int reviewId = rs.getInt("review_id");
-                int like = rs.getInt("isUseful");
-                reviewMap.get(reviewId).addUserLike(userId, like); //добавление лайка к отзыву
-            }
+        RowCallbackHandler rowCallbackHandler = rs -> {
+            int userId = rs.getInt("user_id");
+            int reviewId = rs.getInt("review_id");
+            int like = rs.getInt("isUseful");
+            reviewMap.get(reviewId).addUserLike(userId, like); //добавление лайка к отзыву
         };
         jdbcTemplate.query(sql, rowCallbackHandler); //выполняем запрос и обработку результатов
     }
 
-    /**
+    /*
      * Метод для имплементации функционального интерфейса RowMapper, описывающий
      * превращение данных из ResultSet в объект типа Review
      *

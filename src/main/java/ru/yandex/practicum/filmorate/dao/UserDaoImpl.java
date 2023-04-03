@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -14,10 +16,12 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Component
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class UserDaoImpl implements UserDao {
-    private final Logger log = LoggerFactory.getLogger(UserDaoImpl.class);
-    private final JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public UserDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -36,10 +40,9 @@ public class UserDaoImpl implements UserDao {
         if (userRows.next()) {
             String sqlQuery = "update users set name = ?, email = ?, login = ?, birthday = ? where user_id = ?";
             jdbcTemplate.update(sqlQuery, user.getName(), user.getEmail(), user.getLogin(), user.getBirthday(), user.getId());
-
             return getUserById(user.getId());
         } else {
-            throw new DataNotFoundException("Пользователь с указанным id отсутствует в базе.");
+            throw new DataNotFoundException(String.format("Пользователь с id #%d отсутствует в базе.", user.getId()));
         }
     }
 
@@ -58,15 +61,14 @@ public class UserDaoImpl implements UserDao {
         SqlRowSet userRows = jdbcTemplate.queryForRowSet("select * from users where user_id = ?", id);
 
         if (userRows.next()) {
-            User user = new User(
+            return new User(
                     userRows.getLong("user_id"),
                     userRows.getString("name"),
                     userRows.getString("email"),
                     userRows.getString("login"),
-                    userRows.getDate("birthday").toLocalDate());
-            return user;
+                    Objects.requireNonNull(userRows.getDate("birthday")).toLocalDate());
         } else {
-            throw new DataNotFoundException("Пользователь с указанным id отсутствует в базе.");
+            throw new DataNotFoundException(String.format("Пользователь с id #%d отсутствует в базе.", id));
         }
     }
 
@@ -99,7 +101,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getFriends(long id) {
-        String sqlQuery = "SELECT U.USER_ID, U.NAME, U.EMAIL, U.LOGIN, U.BIRTHDAY FROM FRIENDS AS F LEFT OUTER JOIN USERS AS U ON F.FRIEND_ID = U.USER_ID WHERE F.USER_ID = ?";
+        String sqlQuery = "SELECT U.USER_ID, U.NAME, U.EMAIL, U.LOGIN, U.BIRTHDAY FROM FRIENDS AS F " +
+                "LEFT OUTER JOIN USERS AS U ON F.FRIEND_ID = U.USER_ID WHERE F.USER_ID = ?";
         return jdbcTemplate.query(sqlQuery, this::mapRowToUser, id);
     }
 
@@ -131,7 +134,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void removeFriend(long userId, long friendId) throws DataAlreadyExistException {
+    public void removeFriend(long userId, long friendId) {
         String sqlQuery = "delete from friends where id = (select id from friends where (user_id = ? and friend_id = ?))";
         jdbcTemplate.update(sqlQuery, userId, friendId);
     }

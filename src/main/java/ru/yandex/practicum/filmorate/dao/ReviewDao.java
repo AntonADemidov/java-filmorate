@@ -61,5 +61,4 @@ public interface ReviewDao {
      * @param userId   - id пользователя
      */
     void deleteLike(int reviewId, int userId);
-
 }

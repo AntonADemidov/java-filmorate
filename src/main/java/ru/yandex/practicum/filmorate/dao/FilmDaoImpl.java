@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -16,13 +18,15 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Component
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class FilmDaoImpl implements FilmDao {
-    private final Logger log = LoggerFactory.getLogger(FilmDaoImpl.class);
-    private final JdbcTemplate jdbcTemplate;
-    private final MpaDao mpaDao;
-    private final GenreDao genreDao;
-    private final DirectorDao directorDao;
+    JdbcTemplate jdbcTemplate;
+    MpaDao mpaDao;
+    GenreDao genreDao;
+    DirectorDao directorDao;
 
+    @Autowired
     public FilmDaoImpl(JdbcTemplate jdbcTemplate, MpaDaoImpl mpaDaoImpl,
                        GenreDaoImpl genreDaoImpl, DirectorDao directorDao) {
 
@@ -34,7 +38,6 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public Film createFilm(Film film) {
-
         long filmId = film.getId();
         String sqlFilmQuery = "insert into films (film_id, description, name, release_date, duration, mpa_id) " +
                 "values (?, ?, ?, ?, ?, ?)";
@@ -65,7 +68,7 @@ public class FilmDaoImpl implements FilmDao {
                     filmRows.getLong("film_id"),
                     filmRows.getString("description"),
                     filmRows.getString("name"),
-                    filmRows.getDate("release_date").toLocalDate(),
+                    Objects.requireNonNull(filmRows.getDate("release_date")).toLocalDate(),
                     filmRows.getInt("duration"),
                     createMpa(filmRows.getInt("mpa_id")),
                     new ArrayList<>());
@@ -73,7 +76,7 @@ public class FilmDaoImpl implements FilmDao {
             setFilmGenresAndDirectors(film);
             return film;
         } else {
-            throw new DataNotFoundException("Фильм с указанным id отсутствует в базе.");
+            throw new DataNotFoundException(String.format("Фильм с id #%d  отсутствует в базе.", id));
         }
     }
 
@@ -109,7 +112,7 @@ public class FilmDaoImpl implements FilmDao {
             directorDao.addFilmDirectors(film);
             return getFilmById(filmId);
         } else {
-            throw new DataNotFoundException("Фильм с указанным id отсутствует в базе.");
+            throw new DataNotFoundException(String.format("Фильм с id #%d  отсутствует в базе.", film.getId()));
         }
     }
 
@@ -125,7 +128,8 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
-        Film film = Film.builder()
+
+        return Film.builder()
                 .id(resultSet.getLong("film_id"))
                 .name(resultSet.getString("name"))
                 .description(resultSet.getString("description"))
@@ -134,8 +138,6 @@ public class FilmDaoImpl implements FilmDao {
                 .mpa(createMpa(resultSet.getInt("mpa_id")))
                 .genres(new ArrayList<>())
                 .build();
-
-        return film;
     }
 
     private void setFilmGenresAndDirectors(Film film) {
@@ -179,7 +181,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public void removeLike(long filmId, long userId) throws DataAlreadyExistException {
+    public void removeLike(long filmId, long userId) {
         String sqlQuery = "delete from likes where id = (select id from likes where (film_id = ? and user_id = ?))";
         jdbcTemplate.update(sqlQuery, filmId, userId);
     }
@@ -390,7 +392,6 @@ public class FilmDaoImpl implements FilmDao {
         for (Film film : films) {
             setFilmGenresAndDirectors(film);
         }
-
         return films;
     }
 }

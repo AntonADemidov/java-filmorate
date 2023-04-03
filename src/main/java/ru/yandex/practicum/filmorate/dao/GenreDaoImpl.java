@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -13,22 +15,14 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 @Component
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class GenreDaoImpl implements GenreDao {
-    private final Logger log = LoggerFactory.getLogger(GenreDaoImpl.class);
-    private final JdbcTemplate jdbcTemplate;
+    JdbcTemplate jdbcTemplate;
 
+    @Autowired
     public GenreDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Override
-    public void validateGenre(Genre genre) {
-
-    }
-
-    @Override
-    public String validateGenre(int id) {
-        return null;
     }
 
     @Override

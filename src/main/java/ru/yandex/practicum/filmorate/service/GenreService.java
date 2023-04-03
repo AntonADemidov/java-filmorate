@@ -1,7 +1,8 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -11,9 +12,10 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import java.util.Collection;
 
 @Service
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class GenreService {
-    private final FilmStorage filmStorage;
-    private static final Logger logger = LoggerFactory.getLogger(MpaService.class);
+    FilmStorage filmStorage;
 
     @Autowired
     public GenreService(FilmDbStorage filmStorage) {

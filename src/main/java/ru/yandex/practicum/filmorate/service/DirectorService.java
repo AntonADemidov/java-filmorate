@@ -1,5 +1,9 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.DirectorDao;
 import ru.yandex.practicum.filmorate.exception.DataNotFoundException;
@@ -9,10 +13,12 @@ import ru.yandex.practicum.filmorate.model.Director;
 import java.util.Collection;
 
 @Service
+@Slf4j
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class DirectorService {
-    private final DirectorDao directorDao;
-    private long id = 0;
+    DirectorDao directorDao;
 
+    @Autowired
     public DirectorService(DirectorDao directorDao) {
         this.directorDao = directorDao;
     }
@@ -20,14 +26,13 @@ public class DirectorService {
     private Director getDirectorOrThrowException(long id) {
         Director director = directorDao.getDirectorById(id);
         if (director == null) {
-            throw new DataNotFoundException("Режиссер с указанным ID не найден");
+            throw new DataNotFoundException(String.format("Режиссер с id #%d не найден", id));
         } else
             return director;
     }
 
     public Director createDirector(Director director) throws ValidationException {
         directorDao.createDirector(director);
-
         return directorDao.getLastAddedDirector();
     }
 
