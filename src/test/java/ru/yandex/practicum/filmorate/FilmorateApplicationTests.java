@@ -27,9 +27,12 @@ class FilmorateApplicationTests {
     private final ReviewService reviewService;
 
     @Test
-    public void userTests() throws Exception {
+    public void userAndFilmTests() throws Exception {
         User user = new User(1, "Nick Name", "mail@mail.ru", "dolore",
                 LocalDate.of(1946, 8, 20));
+        User user2 = new User(2, "friend adipisicing", "friend@mail.ru", "friend",
+                LocalDate.of(1976, 8, 20));
+
         User newUser = userDbStorage.createUser(user);
 
         assertThat(newUser).hasFieldOrPropertyWithValue("id", 1L);
@@ -61,8 +64,6 @@ class FilmorateApplicationTests {
                     LocalDate.of(1976, 9, 20));
         }
 
-        User user2 = new User(2, "friend adipisicing", "friend@mail.ru", "friend",
-                LocalDate.of(1976, 8, 20));
         userDbStorage.createUser(user2);
 
         User userById2 = userDbStorage.getUserById(2);
@@ -148,10 +149,7 @@ class FilmorateApplicationTests {
         assertEquals("friend@common.ru", friends.get(0).getEmail());
         assertEquals("common", friends.get(0).getLogin());
         assertEquals(LocalDate.of(2000, 8, 20), friends.get(0).getBirthday());
-    }
 
-    @Test
-    public void filmTests() throws Exception {
         Collection<Film> filmList = filmDbStorage.findAllFilms();
         assertEquals(0, filmList.size());
 
