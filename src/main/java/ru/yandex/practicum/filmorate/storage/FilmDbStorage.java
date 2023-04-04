@@ -1,5 +1,9 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.*;
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
@@ -15,17 +19,23 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class FilmDbStorage implements FilmStorage {
-    private final FilmDao filmDao;
-    private final MpaDao mpaDao;
-    private final GenreDao genreDao;
-    private final UserStorage userStorage;
-    private int idCounter = 0;
+    FilmDao filmDao;
+    MpaDao mpaDao;
+    GenreDao genreDao;
+    FeedDao feedDao;
+    UserStorage userStorage;
+    @NonFinal
+    int idCounter = 0;
 
-    public FilmDbStorage(FilmDaoImpl filmDaoImpl, MpaDaoImpl mpaDaoImpl, GenreDaoImpl genreDaoImpl, UserDbStorage userDbStorage) {
+    @Autowired
+    public FilmDbStorage(FilmDaoImpl filmDaoImpl, MpaDaoImpl mpaDaoImpl, GenreDaoImpl genreDaoImpl,
+                         FeedDaoImpl feedDaoImpl, UserDbStorage userDbStorage) {
         this.filmDao = filmDaoImpl;
         this.mpaDao = mpaDaoImpl;
         this.genreDao = genreDaoImpl;
+        this.feedDao = feedDaoImpl;
         this.userStorage = userDbStorage;
     }
 
@@ -81,6 +91,7 @@ public class FilmDbStorage implements FilmStorage {
     public void addLike(long filmId, long userId) throws DataAlreadyExistException {
         validateFilmAndUser(filmId, userId);
         filmDao.addLike(filmId, userId);
+        feedDao.addLike(filmId, userId);
     }
 
     @Override
@@ -92,41 +103,25 @@ public class FilmDbStorage implements FilmStorage {
     public void removeLike(long filmId, long userId) throws DataAlreadyExistException {
         validateFilmAndUser(filmId, userId);
         filmDao.removeLike(filmId, userId);
+        feedDao.removeLike(filmId, userId);
+    }
+
+    @Override
+    public List<Film> getRecommendationsFilms(long userId) {
+        return filmDao.getRecommendations(userId);
     }
 
     private void validateFilm(Film film) throws Exception {
-        String text = "Параметр должен быть задан (значение не может быть равно null): ";
-
-        if (film.getName() != null) {
-            if (film.getName().isBlank()) {
-                throw new ValidationException("Необходимо добавить название фильма (параметр name: не может быть пустым).");
-            }
-        } else {
-            throw new Exception(text + "name.");
+        if (!(film.getDescription().length() <= 200)) {
+            throw new ValidationException("Необходимо добавить описание фильма (параметр description: до 200 символов.");
         }
 
-        if (film.getDescription() != null) {
-            if (!(film.getDescription().length() <= 200)) {
-                throw new ValidationException("Необходимо добавить описание фильма (параметр description: до 200 символов.");
-            }
-        } else {
-            throw new Exception(text + "description.");
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new ValidationException("Необходимо добавить дату релиза (параметр releaseDate: не ранее 28 декабря 1895 года.");
         }
 
-        if (film.getReleaseDate() != null) {
-            if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-                throw new ValidationException("Необходимо добавить дату релиза (параметр releaseDate: не ранее 28 декабря 1895 года.");
-            }
-        } else {
-            throw new Exception(text + "releaseDate.");
-        }
-
-        if (film.getDuration() != null) {
-            if (film.getDuration() == null || film.getDuration() < 0) {
-                throw new ValidationException("Необходимо добавить продолжительность фильма (параметр duration: положительный).");
-            }
-        } else {
-            throw new Exception(text + "duration.");
+        if (film.getDuration() == null || film.getDuration() < 0) {
+            throw new ValidationException("Необходимо добавить продолжительность фильма (параметр duration: положительный).");
         }
     }
 
@@ -138,5 +133,56 @@ public class FilmDbStorage implements FilmStorage {
         if (!userStorage.getUsers().containsKey(userId)) {
             throw new DataNotFoundException(String.format("Пользователь с id # %d отсутствует в базе.", userId));
         }
+    }
+
+    @Override
+    public Collection<Film> getDirectorFilmsOrderByLikes(long directorId) {
+        return filmDao.getAllDirectorsFilmsOrderByLikes(directorId);
+    }
+
+    @Override
+    public Collection<Film> getDirectorFilmsOrderByYear(long directorId) {
+        return filmDao.getAllDirectorsFilmsOrderByReleaseDate(directorId);
+    }
+
+    @Override
+    public void deleteFilm(long id) {
+        filmDao.deleteFilm(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        idCounter = 0;
+        filmDao.deleteAll();
+    }
+
+    @Override
+    public List<Film> searchFilm(String query, String by) throws ValidationException {
+        validateSearch(query, by);
+        return filmDao.searchFilm(query, by);
+    }
+
+    @Override
+    public List<Film> getCommonFilms(long userId, long friendId) {
+        return filmDao.getCommonFilms(userId, friendId);
+    }
+
+    private void validateSearch(String query, String by) throws ValidationException {
+        if (query.isBlank() || by.isBlank()) {
+            throw new ValidationException("Поиск по пробелам не осуществляется.");
+        }
+
+        if (!by.equals("title")
+                && !by.equals("director")
+                && !by.equals("title,director")
+                && !by.equals("director,title")
+        ) {
+            throw new ValidationException("Параметры поиска заданы не верно");
+        }
+    }
+
+    @Override
+    public List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year) {
+        return filmDao.getAllPopularFilmsOrderByLikes(count, genreId, year);
     }
 }

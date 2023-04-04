@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -34,4 +35,20 @@ public interface FilmStorage {
     Collection<Genre> getAllGenres();
 
     Genre getGenreById(int id);
+
+    Collection<Film> getDirectorFilmsOrderByLikes(long directorId);
+
+    Collection<Film> getDirectorFilmsOrderByYear(long directorId);
+
+    void deleteFilm(long id);
+
+    void deleteAll();
+
+    List<Film> getRecommendationsFilms(long userId);
+
+    List<Film> searchFilm(String query, String by) throws ValidationException;
+
+    List<Film> getCommonFilms(long userId, long friendId);
+
+    List<Film> getAllPopularFilmsOrderByLikes(long count, Integer genreId, Integer year);
 }

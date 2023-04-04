@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.exception.DataAlreadyExistException;
+import ru.yandex.practicum.filmorate.model.Feed;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
@@ -24,5 +25,12 @@ public interface UserStorage {
     List<User> getFriends(long id);
 
     List<User> getCommonFriends(long userId, long otherUserId);
+
     void removeFriend(long userId, long friendId) throws DataAlreadyExistException;
+
+    void deleteUser(long id);
+
+    void deleteAll();
+
+    List<Feed> getFeeds(long userId);
 }

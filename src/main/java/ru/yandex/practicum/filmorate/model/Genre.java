@@ -11,8 +11,10 @@ import lombok.experimental.NonFinal;
 @EqualsAndHashCode
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class Genre {
-    @NonFinal Integer id;
-    @NonFinal String name;
+    @NonFinal
+    Integer id;
+    @NonFinal
+    String name;
 
     public Genre(Integer id) {
         this.id = id;
